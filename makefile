@@ -1,12 +1,12 @@
 OPT= -g -Wall -Wextra #-Werror
 
 
-analyse: analyse.o trace.o
-	gcc $(OPT) $^ -o analyse -lpcap -lm
+main: analyse.o trace.o
+	gcc $(OPT) $^ -o main -lm
 
 %.o: %.c %.h
 	gcc $(OPT) $< -c
 
 
 clean:
-	rm *.o analyseur
+	rm *.o main
