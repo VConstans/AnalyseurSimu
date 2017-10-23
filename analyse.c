@@ -1,4 +1,5 @@
 #include "analyse.h"
+#include "trace.h"
 
 void analyseEvt(struct evt* evt, struct statGlobal* statG)
 {
