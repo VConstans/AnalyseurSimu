@@ -8,6 +8,8 @@ FILE* ouvertureTrace(char nomtrace[])
 {
 	FILE* fdTrace = fopen(nomtrace,"r");
 	//TODO Contorler retour
+
+	return fdTrace;
 }
 
 struct evt* nextEvt(FILE* fdTrace)
@@ -16,7 +18,7 @@ struct evt* nextEvt(FILE* fdTrace)
 
 	int tos,bif;
 	
-	int cmpt = fscanf(fdTrace,"%f %d %d %d %d %d %d %d %d\n",newEvt->temps,newEvt->code, newEvt->pid, newEvt->fid, tos, bif, newEvt->src, newEvt->dst, newEvt->pos);
+	int cmpt = fscanf(fdTrace,"%lf %d %d %d %d %d %s %s %s\n",&(newEvt->temps),&(newEvt->code),&(newEvt->pid), &(newEvt->fid), &(tos), &(bif), newEvt->src, newEvt->dst, newEvt->pos);
 
 	if(cmpt==0)
 	{
