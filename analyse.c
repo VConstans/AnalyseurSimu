@@ -4,6 +4,7 @@
 void analyseEvt(struct evt* evt, struct statGlobal* statG)
 {
 	analyseGlobal(evt,statG);
+	//TODO autre analyse
 }
 
 void analyseGlobal(struct evt* evt, struct statGlobal* statG)
