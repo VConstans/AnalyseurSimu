@@ -11,6 +11,6 @@ struct evt
 	char* src;
 	char* dst;
 	char* pos;
-}
+};
 
 #endif

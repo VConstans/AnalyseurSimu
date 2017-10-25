@@ -11,6 +11,6 @@ struct statGlobal
 	unsigned int nbFlux;
 	unsigned int* locPerte;
 	//XXX....
-}
+};
 
 #endif
