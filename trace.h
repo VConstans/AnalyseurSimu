@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 FILE* ouvertureTrace(char nomtrace[]);
-struct evt* lectureEvt(FILE* fdTrace);
 struct evt* nextEvt(FILE* fdTrace);
 
 #endif

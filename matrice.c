@@ -50,7 +50,7 @@ matrice lectureMatrice(FILE* fdMatrice)
 		}
 	}
 
-	return matrice;
+	return mat;
 }
 
 matrice loadMatriceAdjacence(char* fileMatrice)

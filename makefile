@@ -1,12 +1,12 @@
 OPT= -g -Wall -Wextra #-Werror
 
 
-main: analyse.o trace.o
-	gcc $(OPT) $^ -o main -lm
+analyseurSimu: analyse.o trace.o analyseurSimu.o matrice.o
+	gcc $(OPT) $^ -o $@ -lm
 
 %.o: %.c %.h
 	gcc $(OPT) $< -c
 
 
 clean:
-	rm *.o main
+	rm *.o analyseurSimu
