@@ -26,6 +26,9 @@ struct evt* nextEvt(FILE* fdTrace)
 
 	if(cmpt==0)
 	{
+		free(newEvt->src);
+		free(newEvt->dst);
+		free(newEvt->pos);
 		free(newEvt);
 		return NULL;
 	}
