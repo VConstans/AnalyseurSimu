@@ -22,7 +22,7 @@ struct evt* nextEvt(FILE* fdTrace)
 
 	int tos,bif;
 	
-	int cmpt = fscanf(fdTrace,"%lf %d %d %d %d %d %s %s %s\n",&(newEvt->temps),&(newEvt->code),&(newEvt->pid), &(newEvt->fid), &(tos), &(bif), newEvt->src, newEvt->dst, newEvt->pos);
+	int cmpt = fscanf(fdTrace,"%lf %d %d %d %d ",&(newEvt->temps),&(newEvt->code),&(newEvt->pid), &(newEvt->fid), &(tos));
 
 	if(cmpt==0)
 	{
@@ -34,6 +34,14 @@ struct evt* nextEvt(FILE* fdTrace)
 	}
 	else
 	{
+		if(newEvt->code == 4)
+		{
+			fscanf(fdTrace,"%s %s %s\n",(newEvt->src),(newEvt->dst),(newEvt->pos));	//TODO test
+		}
+		else
+		{
+			fscanf(fdTrace,"%d %s %s %s\n",&bif,(newEvt->src),(newEvt->dst),(newEvt->pos));	//TODO test
+		}
 		return newEvt;
 	}
 }
