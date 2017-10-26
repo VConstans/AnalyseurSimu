@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "trace.h"
 
-#define TAILLE_LECTURE 200
+#define TAILLE_NOM_NOEUD 10	//TODO changer
+
 
 FILE* ouvertureTrace(char nomtrace[])
 {
@@ -14,7 +15,10 @@ FILE* ouvertureTrace(char nomtrace[])
 
 struct evt* nextEvt(FILE* fdTrace)
 {
-	struct evt* newEvt = malloc(sizeof(struct evt));
+	struct evt* newEvt = (struct evt*) malloc(sizeof(struct evt));
+	newEvt->src = (char*) malloc (TAILLE_NOM_NOEUD*sizeof(char));
+	newEvt->dst = (char*) malloc (TAILLE_NOM_NOEUD*sizeof(char));
+	newEvt->pos = (char*) malloc (TAILLE_NOM_NOEUD*sizeof(char));
 
 	int tos,bif;
 	
