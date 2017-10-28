@@ -18,6 +18,8 @@ matrice lectureMatrice(FILE* fdMatrice)
 		exit(-1);
 	}
 
+	fseek(fdMatrice,0,SEEK_SET);
+
 	do
 	{
 		lg = fscanf(fdMatrice,"%d",&val);	//TODO test si fichier mal formaté
@@ -28,6 +30,7 @@ matrice lectureMatrice(FILE* fdMatrice)
 		}
 		taille++;
 	} while(fgetc(fdMatrice) == '\t');
+
 
 	fseek(fdMatrice,0,SEEK_SET);
 
