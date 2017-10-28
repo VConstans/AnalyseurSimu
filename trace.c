@@ -24,7 +24,7 @@ struct evt* nextEvt(FILE* fdTrace)
 	
 	int cmpt = fscanf(fdTrace,"%lf %d %d %d %d ",&(newEvt->temps),&(newEvt->code),&(newEvt->pid), &(newEvt->fid), &(tos));
 
-	if(cmpt==0)
+	if(cmpt==-1)
 	{
 		free(newEvt->src);
 		free(newEvt->dst);
