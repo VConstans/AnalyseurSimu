@@ -7,9 +7,10 @@
 #include "trace.h"
 #include "evt.h"
 #include "analyse.h"
+#include "matrice.h"
 
 
 
-int main(/*TODO arg*/);
+int main(int argc, char* argv[]);
 
 #endif

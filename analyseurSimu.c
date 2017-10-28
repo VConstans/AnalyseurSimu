@@ -4,6 +4,8 @@ int main(int argc, char* argv[])
 {
 	FILE* fdTrace = ouvertureTrace(argv[1]);
 
+	matrice matAdj = loadMatriceAdjacence(argv[2]);
+
 	struct evt* newEvt;
 
 	struct statGlobal stat;
