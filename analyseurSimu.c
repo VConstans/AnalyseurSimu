@@ -1,8 +1,8 @@
 #include "analyseurSimu.h"
 
-int main(/*TODO arg*/)
+int main(int argc, char* argv[])
 {
-	FILE* fdTrace = ouvertureTrace("trace2650.txt");
+	FILE* fdTrace = ouvertureTrace(argv[1]);
 
 	struct evt* newEvt;
 
