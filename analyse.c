@@ -14,8 +14,11 @@ void analyseGlobal(struct evt* evt, struct statGlobal* statG)
 		case 0:
 			statG->paquetEmis++;
 			break;
+		case 1:
+			statG->arriveInter++;
+			break;
 		case 2:
-			statG->paquetTraite++;
+			statG->departFile++;
 			break;
 		case 3:
 			statG->paquetRecus++;

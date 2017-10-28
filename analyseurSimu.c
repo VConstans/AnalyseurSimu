@@ -7,8 +7,9 @@ int main(/*TODO arg*/)
 	struct evt* newEvt;
 
 	struct statGlobal stat;
-	stat.paquetTraite=0;
 	stat.paquetEmis=0;
+	stat.arriveInter=0;
+	stat.departFile=0;
 	stat.paquetRecus=0;
 	stat.paquetPerdus=0;
 	stat.nbFlux=0;
@@ -16,7 +17,7 @@ int main(/*TODO arg*/)
 
 
 	int cmpt=0;
-	struct evt* ancienEvt;
+	struct evt* ancienEvt=NULL;
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
@@ -25,11 +26,18 @@ int main(/*TODO arg*/)
 
 		cmpt++;
 
+		if(ancienEvt!=NULL)
+		{
+			free(ancienEvt->src);
+			free(ancienEvt->dst);
+			free(ancienEvt->pos);
+			free(ancienEvt);
+		}
 		ancienEvt = newEvt;
 	}
 
 
-	printf("Paquet traite %u\nPaquet Emis %u\nPaquet Recus %u\nPaquet perdus %u\n",stat.paquetTraite,stat.paquetEmis,stat.paquetRecus,stat.paquetPerdus);
+	printf("Paquet Emis %u\nArrivé noeud inter %u\nDepart fille %u\nPaquet Recus %u\nPaquet perdus %u\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus);
 
 	printf("cmpt %d\n",cmpt);
 

@@ -4,8 +4,9 @@
 
 struct statGlobal
 {
-	unsigned int paquetTraite;
 	unsigned int paquetEmis;
+	unsigned int arriveInter;
+	unsigned int departFile;
 	unsigned int paquetRecus;
 	unsigned int paquetPerdus;
 	unsigned int nbFlux;
