@@ -65,6 +65,8 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 			statNoeud->nbPaquetTotalDansFile--;
 //			setValTabAssoc(&(statG->tailleFile),evt->pos,statG->nbPaquetDansFile[evt->pos];
 		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
+
+			incr(&(statNoeud->nbPerte),evt->pos,statNoeud->nbNoeud);
 			break;
 		
 	}
