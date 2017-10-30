@@ -1,6 +1,6 @@
 #include "listeFlux.h"
 
-void insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
+void insertion(unsigned int numFluxPaquet, struct evt* evt,struct listeFlux* liste)
 {
 	//File vide
 	if(liste->suivant == NULL)
@@ -9,6 +9,26 @@ void insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
 
 		maillon->numFlux = numFluxPaquet;
 		maillon->nbPaquet = 1;
+		maillon->emis=0;
+		maillon->recus=0;
+		maillon->perdu=0;
+
+		switch(evt->code)
+		{
+			case 0:
+				maillon->emis=1;
+				break;
+			case 3:
+				maillon->recus=1;
+				break;
+			case 4:
+				maillon->perdu=1;
+				break;
+		}
+
+		maillon->tempsDebut = evt->temps;
+		maillon->tempsFin = evt->temps;
+
 		maillon->suivant = NULL;
 
 		liste->suivant=maillon;
@@ -31,6 +51,22 @@ void insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
 		{
 			curseur->nbPaquet++;
 
+			switch(evt->code)
+			{
+				case 0:
+					curseur->emis++;
+					break;
+				case 3:
+					curseur->recus++;
+					break;
+				case 4:
+					curseur->perdu++;
+					break;
+			}
+
+			
+			curseur->tempsFin = evt->temps;
+
 			return;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
@@ -39,6 +75,28 @@ void insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
 
 			maillon->numFlux = numFluxPaquet;
 			maillon->nbPaquet = 1;
+
+			maillon->emis=0;
+			maillon->recus=0;
+			maillon->perdu=0;
+
+			switch(evt->code)
+			{
+				case 0:
+					maillon->emis=1;
+					break;
+				case 3:
+					maillon->recus=1;
+					break;
+				case 4:
+					maillon->perdu=1;
+					break;
+			}
+
+			maillon->tempsDebut = evt->temps;
+			maillon->tempsFin = evt->temps;
+
+
 			maillon->suivant = curseur;
 
 			liste->nbFlux++;
@@ -63,6 +121,27 @@ void insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
 
 	maillon->numFlux = numFluxPaquet;
 	maillon->nbPaquet = 1;
+
+	maillon->emis=0;
+	maillon->recus=0;
+	maillon->perdu=0;
+
+	switch(evt->code)
+	{
+		case 0:
+			maillon->emis=1;
+			break;
+		case 3:
+			maillon->recus=1;
+			break;
+		case 4:
+			maillon->perdu=1;
+			break;
+	}
+
+	maillon->tempsDebut = evt->temps;
+	maillon->tempsFin = evt->temps;
+
 	maillon->suivant = NULL;
 	precedant->suivant = maillon;
 	liste->nbFlux++;
