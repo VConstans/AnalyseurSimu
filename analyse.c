@@ -1,9 +1,10 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud)
 {
 	analyseGlobal(evt->code,statG);
 	analyseFlux(evt->fid,listeFlux);
+	analyseNoeud(evt,statNoeud);
 	//TODO autre analyse
 }
 
@@ -35,4 +36,29 @@ void analyseFlux(unsigned int fid, struct listeFlux* listeFlux)
 {
 	insertion(fid,listeFlux);
 	//TODO autre analyse
+}
+
+
+
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
+{
+	switch(evt->code)
+	{
+		case 0:
+			break;
+		case 1:
+//			statNoeud->nbPaquetDansFile[evt->pos]++;
+			statNoeud->nbPaquetTotalDansFile++;
+			break;
+		case 2:
+//			statNoeud->nbPaquetDansFile[evt->pos]--;
+			statNoeud->nbPaquetTotalDansFile--;
+			break;
+		case 3:
+			break;
+		case 4:
+//			statG->tailleFile[evt->pos]=statG->nbPaquetDansFile[evt->pos];
+			break;
+		
+	}
 }
