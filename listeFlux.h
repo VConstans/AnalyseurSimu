@@ -8,6 +8,11 @@ struct flux
 {
 	unsigned int numFlux;
 	unsigned int nbPaquet;
+	unsigned int recu;
+	unsigned int perdu;
+	unsigned int emis;
+	double tempsDebut;
+	double tempsFin;
 	struct flux* suivant;
 };
 
