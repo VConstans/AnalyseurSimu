@@ -45,6 +45,7 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 	switch(evt->code)
 	{
 		case 0:
+			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 1:
 //			statNoeud->nbPaquetDansFile[evt->pos]++;
@@ -55,8 +56,10 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 3:
+			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
+			statNoeud->nbPaquetTotalDansFile--;
 //			statG->tailleFile[evt->pos]=statG->nbPaquetDansFile[evt->pos];
 			break;
 		

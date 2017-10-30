@@ -17,6 +17,6 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud)
 	{
 		//fprintf(fd,"%u ",statNoeud->nbPaquetDansFile[i]);
 	}
-
-	fprintf(fd,"%u\n",statNoeud->nbPaquetTotalDansFile);
+	
+	fprintf(fd,"%d\n",statNoeud->nbPaquetTotalDansFile);
 }
