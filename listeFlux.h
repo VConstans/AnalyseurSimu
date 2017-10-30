@@ -17,6 +17,6 @@ struct listeFlux
 	struct flux* suivant;
 };
 
-void insetion(unsigned int numFluxPaquet, struct listeFlux* liste);
+void insertion(unsigned int numFluxPaquet, struct listeFlux* liste);
 
 #endif

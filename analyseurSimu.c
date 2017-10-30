@@ -17,16 +17,17 @@ int main(int argc, char* argv[])
 	stat.nbFlux=0;
 	stat.locPerte=NULL;
 
+	struct listeFlux flux;
+	flux.nbFlux=0;
+	flux.suivant = NULL;
 
-	int cmpt=0;
+
 	struct evt* ancienEvt=NULL;
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		looping:
-		analyseGlobal(newEvt,&stat);
+		analyseEvt(newEvt,&stat,&flux);
 
-		cmpt++;
 
 		if(ancienEvt!=NULL)
 		{
@@ -35,15 +36,11 @@ int main(int argc, char* argv[])
 			free(ancienEvt->pos);
 			free(ancienEvt);
 		}
-		ancienEvt = newEvt;
 	}
 
 
-	printf("Paquet Emis %u\nArrivé noeud inter %u\nDepart fille %u\nPaquet Recus %u\nPaquet perdus %u\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus);
+	printf("Paquet Emis %u\nArrivé noeud inter %u\nDepart fille %u\nPaquet Recus %u\nPaquet perdus %u\nNb flux %u",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
 
-	printf("cmpt %d\n",cmpt);
-
-	printf("%f %d %u",ancienEvt->temps,ancienEvt->code,ancienEvt->pid);
 
 	return 0;
 }

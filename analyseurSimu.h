@@ -8,6 +8,7 @@
 #include "evt.h"
 #include "analyse.h"
 #include "matrice.h"
+#include "listeFlux.h"
 
 
 
