@@ -9,6 +9,9 @@
 #include "analyse.h"
 #include "matrice.h"
 #include "listeFlux.h"
+#include "statNoeud.h"
+#include "fd.h"
+#include "courbe.h"
 
 
 

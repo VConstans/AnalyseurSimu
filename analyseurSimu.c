@@ -4,7 +4,7 @@ int main(int argc, char* argv[])
 {
 	FILE* fdTrace = ouvertureTrace(argv[1]);
 
-	matrice matAdj = loadMatriceAdjacence(argv[2]);
+	struct matriceAdj* matAdj = loadMatriceAdjacence(argv[2]);
 
 	struct evt* newEvt;
 
@@ -21,12 +21,19 @@ int main(int argc, char* argv[])
 	flux.nbFlux=0;
 	flux.suivant = NULL;
 
+	struct statNoeud statNoeud;
+	initStatNoeud(&statNoeud,matAdj->nbNoeud);
+
+	struct fd dataOutput;
+	dataOutput.remplissageFile = fopen("remplissageFile.out","w+");
+
 
 	struct evt* ancienEvt=NULL;
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud);
+		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud);
 
 
 		if(ancienEvt!=NULL)
