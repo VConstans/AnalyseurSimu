@@ -4,13 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct listeFlux
+struct flux
 {
 	unsigned int numFlux;
 	unsigned int nbPaquet;
-	struct listeFlux* suivant;
+	struct flux* suivant;
 };
 
-struct listeFlux* insetion(unsigned int numFluxPaquet, struct listeFlux* liste);
+struct listeFlux
+{
+	unsigned int nbFlux;
+	struct flux* suivant;
+};
+
+void insetion(unsigned int numFluxPaquet, struct listeFlux* liste);
 
 #endif

@@ -1,21 +1,23 @@
 #include "listeFlux.h"
 
-struct listeFlux* insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
+void insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
 {
 	//File vide
-	if(liste == NULL)
+	if(liste->suivant == NULL)
 	{
-		struct listeFlux* maillon = (struct listeFlux*) malloc(sizeof(struct listeFlux));
+		struct flux* maillon = (struct flux*) malloc(sizeof(struct flux));
 
 		maillon->numFlux = numFluxPaquet;
 		maillon->nbPaquet = 1;
 		maillon->suivant = NULL;
 
-		return maillon;
+		liste->suivant=maillon;
+		liste->nbFlux++;
+		return;
 	}
 
-	struct listeFlux* curseur = liste;
-	struct listeFlux* precedant = NULL;
+	struct flux* curseur = liste->suivant;
+	struct flux* precedant = NULL;
 
 	//File non vide
 	while(curseur!=NULL)
@@ -29,37 +31,40 @@ struct listeFlux* insertion(unsigned int numFluxPaquet, struct listeFlux* liste)
 		{
 			curseur->nbPaquet++;
 
-			return liste;
+			return;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{
-			struct listeFlux* maillon = (struct listeFlux*) malloc(sizeof(struct listeFlux));
+			struct flux* maillon = (struct flux*) malloc(sizeof(struct flux));
 
 			maillon->numFlux = numFluxPaquet;
 			maillon->nbPaquet = 1;
 			maillon->suivant = curseur;
 
+			liste->nbFlux++;
+
 			//Insertion en debut de liste
 			if(precedant == NULL)
 			{
-				return maillon;
+				liste->suivant = maillon;
+				return;
 			}
 			else
 			{
 				precedant->suivant = maillon;
-
-				return liste;
+				return;
 			}
 		}
 
 	}
 
 	//Insertion en fin de liste
-	struct listeFlux* maillon = (struct listeFlux*) malloc(sizeof(struct listeFlux));
+	struct flux* maillon = (struct flux*) malloc(sizeof(struct flux));
 
 	maillon->numFlux = numFluxPaquet;
 	maillon->nbPaquet = 1;
 	maillon->suivant = NULL;
 	precedant->suivant = maillon;
-	return liste;
+	liste->nbFlux++;
+	return;
 }
