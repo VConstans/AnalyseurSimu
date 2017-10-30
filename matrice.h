@@ -6,10 +6,16 @@
 
 typedef int** matrice;
 
+struct matriceAdj
+{
+	matrice mat;
+	unsigned int nbNoeud;
+};
+
 
 FILE* ouvertureMatrice(char* matrice);
-matrice lectureMatrice(FILE* fdMatrice);
-matrice loadMatriceAdjacence(char* fileMatrice);
+struct matriceAdj* lectureMatrice(FILE* fdMatrice);
+struct matriceAdj* loadMatriceAdjacence(char* fileMatrice);
 int debitLien(matrice mat,int i, int j);
 
 #endif

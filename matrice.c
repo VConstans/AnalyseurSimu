@@ -7,7 +7,7 @@ FILE* ouvertureMatrice(char* matrice)
 }
 
 
-matrice lectureMatrice(FILE* fdMatrice)
+struct matriceAdj* lectureMatrice(FILE* fdMatrice)
 {
 	int taille = 0;
 	int val,lg;
@@ -35,31 +35,35 @@ matrice lectureMatrice(FILE* fdMatrice)
 	fseek(fdMatrice,0,SEEK_SET);
 
 
-	matrice mat = (int**) malloc (taille*sizeof(int*));
+	struct matriceAdj* matAdj= (struct matriceAdj*) malloc (sizeof(struct matriceAdj));
+
+	matAdj->nbNoeud = taille;
+
+	matAdj->mat = (int**) malloc (taille*sizeof(int*));
 
 	int i,j;
 
 	for(i=0;i<taille;i++)
 	{
-		mat[i] = (int*) malloc(taille*sizeof(int));
+		matAdj->mat[i] = (int*) malloc(taille*sizeof(int));
 	}
 
 	for(i=0;i<taille;i++)
 	{
 		for(j=0;j<taille;j++)
 		{
-			fscanf(fdMatrice,"%d",&mat[i][j]);
+			fscanf(fdMatrice,"%d",&(matAdj->mat[i][j]));
 			fseek(fdMatrice,1,SEEK_CUR);
 		}
 	}
 
-	return mat;
+	return matAdj;
 }
 
-matrice loadMatriceAdjacence(char* fileMatrice)
+struct matriceAdj* loadMatriceAdjacence(char* fileMatrice)
 {
 	FILE* fdMatrice = ouvertureMatrice(fileMatrice);
-	matrice mat = lectureMatrice(fdMatrice);
+	struct matriceAdj* mat = lectureMatrice(fdMatrice);
 	fclose(fdMatrice);
 
 	return mat;
