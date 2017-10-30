@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct assocNoeudEntier
 {
@@ -28,5 +29,8 @@ struct statNoeud
 
 
 void initStatNoeud(struct statNoeud* statNoeud, unsigned int nbNoeud);
+void setValTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int val, unsigned int nbNoeud);
+void incrTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int nbNoeud);
+void decrTabAssoc(struct tabAssoc* tabAssoc, char* noeud);
 
 #endif

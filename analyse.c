@@ -45,22 +45,26 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 	switch(evt->code)
 	{
 		case 0:
+			incrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos,statNoeud->nbNoeud);
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 1:
-//			statNoeud->nbPaquetDansFile[evt->pos]++;
+			incrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos,statNoeud->nbNoeud);
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 2:
-//			statNoeud->nbPaquetDansFile[evt->pos]--;
+		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
+			//TODO decr
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 3:
+		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
 			statNoeud->nbPaquetTotalDansFile--;
-//			statG->tailleFile[evt->pos]=statG->nbPaquetDansFile[evt->pos];
+//			setValTabAssoc(&(statG->tailleFile),evt->pos,statG->nbPaquetDansFile[evt->pos];
+		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
 			break;
 		
 	}
