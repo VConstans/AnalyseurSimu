@@ -1,20 +1,27 @@
 #include "listePaquet.h"
 
+struct paquet* createPaquet(struct evt* evt)
+{
+	struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
+
+	maillon->numPaquet = evt->pid;
+
+	maillon->emission = evt->temps;
+
+	int taille = strlen(evt->src)+1;
+	maillon->pos = (char*)malloc(taille*sizeof(char));
+
+	strcpy(maillon->pos,evt->src);
+
+	return maillon;
+}
+
 void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 {
 	//File vide
 	if(liste->suivant == NULL)
 	{
-		struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
-
-		maillon->numPaquet = evt->pid;
-
-		maillon->emission = evt->temps;
-
-		int taille = strlen(evt->src)+1;
-		maillon->pos = (char*)malloc(taille*sizeof(char));
-
-		strcpy(maillon->pos,evt->src);
+		struct paquet* maillon = createPaquet(evt);
 
 		maillon->suivant = NULL;
 
@@ -41,17 +48,7 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{
-			struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
-
-			maillon->numPaquet = evt->pid;
-			maillon->emission = evt->temps;
-
-			int taille = strlen(evt->src)+1;
-			maillon->pos = (char*)malloc(taille*sizeof(char));
-
-			strcpy(maillon->pos,evt->src);
-
-
+			struct paquet* maillon = createPaquet(evt);
 			maillon->suivant = curseur;
 
 			liste->nbPaquet++;
@@ -72,14 +69,7 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 	}
 
 	//Insertion en fin de liste
-	struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
-
-	maillon->numPaquet = evt->pid;
-	maillon->emission = evt->temps;
-
-	int taille = strlen(evt->src)+1;
-	maillon->pos = (char*)malloc(taille*sizeof(char));
-
+	struct paquet* maillon = createPaquet(evt);
 	strcpy(maillon->pos,evt->src);
 
 

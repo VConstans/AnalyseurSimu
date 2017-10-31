@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "evt.h"
+#include "listePaquet.h"
 
 struct flux
 {
@@ -14,6 +15,7 @@ struct flux
 	unsigned int emis;
 	double tempsDebut;
 	double tempsFin;
+	struct listePaquet* paquets;
 	struct flux* suivant;
 };
 
@@ -23,6 +25,6 @@ struct listeFlux
 	struct flux* suivant;
 };
 
-void addFlux(struct evt* evt,struct listeFlux* liste);
+struct flux* addFlux(struct evt* evt,struct listeFlux* liste);
 
 #endif

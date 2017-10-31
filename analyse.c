@@ -1,12 +1,11 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch, struct listePaquet* listePaquet)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch)
 {
 	analyseGlobal(evt->code,statG);
 	analyseFlux(evt,listeFlux);
-	analyseNoeud(evt,statNoeud, listePaquet);
+	analyseNoeud(evt,statNoeud);
 	analyseEch(evt->code,statEch);
-	analysePaquet(evt,listePaquet);
 	//TODO autre analyse
 }
 
@@ -34,33 +33,6 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-void analysePaquet(struct evt* evt, struct listePaquet* listePaquet)
-{
-	switch(evt->code)
-	{
-		case 0:
-			addAndSetEmissionPaquet(evt,listePaquet);
-			break;
-		case 1:
-			updatePos(evt,listePaquet);
-			break;
-		case 2:
-			updatePos(evt,listePaquet);	//XXX utile?
-			break;
-		case 3:
-			updatePos(evt,listePaquet);	//XXX utile?
-			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
-			setRecepPaquet(evt,listePaquet);	//XXX utile?
-			//XXX durée de transmission avant del paquet
-			delPaquet(evt,listePaquet);
-			break;
-		case 4:
-			updatePos(evt,listePaquet);	//XXX utile?
-			//XXX aussi delPaquet?
-	}
-
-}
-
 void analyseEch(int code, struct statEch* statEch)
 {
 	switch(code)
@@ -80,13 +52,35 @@ void analyseEch(int code, struct statEch* statEch)
 
 void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 {
-	addFlux(evt,listeFlux);
-	//TODO autre analyse
+	struct flux* flux = addFlux(evt,listeFlux);
+
+	switch(evt->code)
+	{
+		case 0:
+			addAndSetEmissionPaquet(evt,flux->paquets);
+			break;
+		case 1:
+			updatePos(evt,flux->paquets);
+			break;
+		case 2:
+			updatePos(evt,flux->paquets);	//XXX utile?
+			break;
+		case 3:
+			updatePos(evt,flux->paquets);	//XXX utile?
+			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
+			setRecepPaquet(evt,flux->paquets);	//XXX utile?
+			//XXX durée de transmission avant del paquet
+			delPaquet(evt,flux->paquets);
+			break;
+		case 4:
+			updatePos(evt,flux->paquets);	//XXX utile?
+			//XXX aussi delPaquet?
+	}//TODO autre analyse*/
 }
 
 
 
-void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listePaquet* listePaquet)
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 {
 	char* pos;
 	switch(evt->code)

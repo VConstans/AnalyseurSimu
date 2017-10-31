@@ -32,16 +32,11 @@ int main(int argc, char* argv[])
 	dataOutput.paquetTransit = fopen("paquetTransit.out","w+");
 
 
-	struct listePaquet listePaquet;
-	listePaquet.nbPaquet=0;
-	listePaquet.suivant = NULL;
-
-
 	struct evt* ancienEvt=NULL;
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch,&listePaquet);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch);
 		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&statEch);
 
 
