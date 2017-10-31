@@ -3,7 +3,7 @@
 void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud)
 {
 	analyseGlobal(evt->code,statG);
-	analyseFlux(evt->fid,listeFlux);
+	analyseFlux(evt,listeFlux);
 	analyseNoeud(evt,statNoeud);
 	//TODO autre analyse
 }
@@ -32,9 +32,26 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-void analyseFlux(unsigned int fid, struct listeFlux* listeFlux)
+void analyseEch(int code, struct statEch* statEch)
 {
-	insertion(fid,listeFlux);
+	switch(code)
+	{
+		case 0:
+			statEch->nbPaquetTransit++;
+			break;
+		case 3:
+			statEch->nbPaquetTransit--;
+			break;
+		case 4:
+			statEch->nbPaquetTransit--;
+			break;
+	}
+}
+
+
+void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
+{
+	addFlux(evt,listeFlux);
 	//TODO autre analyse
 }
 
@@ -66,7 +83,7 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 //			setValTabAssoc(&(statG->tailleFile),evt->pos,statG->nbPaquetDansFile[evt->pos];
 		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
 
-			incr(&(statNoeud->nbPerte),evt->pos,statNoeud->nbNoeud);
+			incrTabAssoc(&(statNoeud->nbPerte),evt->pos,statNoeud->nbNoeud);
 			break;
 		
 	}
