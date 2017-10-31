@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "evt.h"
 
 struct flux
 {
@@ -22,6 +23,6 @@ struct listeFlux
 	struct flux* suivant;
 };
 
-void insertion(unsigned int numFluxPaquet, struct listeFlux* liste);
+void addFlux(struct evt* evt,struct listeFlux* liste);
 
 #endif
