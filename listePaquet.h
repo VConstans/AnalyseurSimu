@@ -4,12 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "evt.h"
+#include <string.h>
 
 struct paquet
 {
 	unsigned int numPaquet;
 	double emission;
 	double reception;
+	char* pos;
 	struct paquet* suivant;
 };
 
@@ -19,7 +21,10 @@ struct listePaquet
 	struct paquet* suivant;
 };
 
-void addAndSetEmissionPaquet(unsigned int numPaquet,struct evt* evt, struct listePaquet* liste);
-void SetRecepPaquet(unsigned int numPaquet,struct evt* evt, struct listePaquet* liste);
+void addAndSetEmissionPaquet(struct evt* evt, struct listePaquet* liste);
+void setRecepPaquet(struct evt* evt, struct listePaquet* liste);
+void updatePos(struct evt* evt, struct listePaquet* liste);
+char* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste);
+void delPaquet(struct evt* evt, struct listePaquet* liste);
 
 #endif
