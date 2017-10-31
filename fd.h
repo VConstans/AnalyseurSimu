@@ -7,6 +7,7 @@
 struct fd
 {
 	FILE* remplissageFile;
+	FILE* paquetTransit;
 };
 
 #endif

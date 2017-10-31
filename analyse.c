@@ -1,10 +1,11 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch)
 {
 	analyseGlobal(evt->code,statG);
 	analyseFlux(evt,listeFlux);
 	analyseNoeud(evt,statNoeud);
+	analyseEch(evt->code,statEch);
 	//TODO autre analyse
 }
 

@@ -24,16 +24,20 @@ int main(int argc, char* argv[])
 	struct statNoeud statNoeud;
 	initStatNoeud(&statNoeud,matAdj->nbNoeud);
 
+	struct statEch statEch;
+	statEch.nbPaquetTransit = 0;
+
 	struct fd dataOutput;
 	dataOutput.remplissageFile = fopen("remplissageFile.out","w+");
+	dataOutput.paquetTransit = fopen("paquetTransit.out","w+");
 
 
 	struct evt* ancienEvt=NULL;
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud);
-		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch);
+		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&statEch);
 
 
 		if(ancienEvt!=NULL)
