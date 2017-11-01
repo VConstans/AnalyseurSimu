@@ -8,10 +8,8 @@ struct paquet* createPaquet(struct evt* evt)
 
 	maillon->emission = evt->temps;
 
-	int taille = strlen(evt->src)+1;
-	maillon->pos = (char*)malloc(taille*sizeof(char));
+	maillon->pos = convPosToNum(evt->pos);
 
-	strcpy(maillon->pos,evt->src);
 
 	return maillon;
 }
@@ -70,7 +68,7 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 
 	//Insertion en fin de liste
 	struct paquet* maillon = createPaquet(evt);
-	strcpy(maillon->pos,evt->src);
+	maillon->pos = convPosToNum(evt->src);
 
 
 
@@ -141,11 +139,9 @@ void updatePos(struct evt* evt, struct listePaquet* liste)
 		}
 		else if(evt->pid == curseur->numPaquet)
 		{
-			free(curseur->pos);
-			int taille = strlen(evt->pos)+1;
-			curseur->pos = (char*)malloc(taille*sizeof(char*));
+			curseur->pos = convPosToNum(evt->pos);
+			//TODO update file
 
-			strcpy(curseur->pos,evt->pos);
 			return;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
@@ -162,7 +158,7 @@ void updatePos(struct evt* evt, struct listePaquet* liste)
 }
 
 
-char* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste)
+struct localisationPaquet* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste)
 {
 	//File vide
 	if(liste->suivant == NULL)
@@ -182,7 +178,9 @@ char* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste)
 		}
 		else if(numPaquet == curseur->numPaquet)
 		{
-			return curseur->pos;
+			struct localisationPaquet* localisation = (struct localisationPaquet*)malloc(sizeof(struct localisationPaquet));
+			localisation->noeud = curseur->pos;
+			localisation->file = curseur->file;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{
@@ -232,7 +230,6 @@ void delPaquet(struct evt* evt, struct listePaquet* liste)
 
 			liste->nbPaquet--;
 
-			free(curseur->pos);
 			free(curseur);
 
 			return;

@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	flux.suivant = NULL;
 
 	struct statNoeud statNoeud;
-	initStatNoeud(&statNoeud,matAdj->nbNoeud);
+	initStatNoeud(&statNoeud,matAdj->nbNoeud,matAdj->mat);
 
 	struct statEch statEch;
 	statEch.nbPaquetTransit = 0;

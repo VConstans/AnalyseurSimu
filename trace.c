@@ -45,3 +45,11 @@ struct evt* nextEvt(FILE* fdTrace)
 		return newEvt;
 	}
 }
+
+
+unsigned int convPosToNum(char* pos)
+{
+	unsigned int num;
+	sscanf(pos,"N%d",&num);
+	return num;
+}

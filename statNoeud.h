@@ -4,14 +4,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
+#include "localisationPaquet.h"
+#include "matrice.h"
+#include "listeFile.h"
 
 struct noeud
 {
-	char* noeud;
+	unsigned int numNoeud;
 	unsigned int nbPaquetDansFile;
 	unsigned int tailleFile;
 	unsigned int nbPerte;
+	struct file* files;
 };
 
 struct statNoeud
@@ -24,12 +28,12 @@ struct statNoeud
 
 
 
-void initStatNoeud(struct statNoeud* statNoeud, unsigned int nbNoeud);
-void initNoeud(struct statNoeud* statNoeud,char* noeud);
-void setTailleFile(struct statNoeud* statNoeud, char* noeud);
-void incrNbPaquetDansFile(struct statNoeud* statNoeud, char* noeud);
-void decrNbPaquetDansFile(struct statNoeud* tabAssoc, char* noeud);
-void incrNbPerte(struct statNoeud* statNoeud, char* noeud);
+void initStatNoeud(struct statNoeud* statNoeud, unsigned int nbNoeud, matrice matAdj);
+void initNoeud(struct noeud* noeud,unsigned int numNoeud, unsigned int nbNoeud, matrice matAdj);
+void setTailleFile(struct statNoeud* statNoeud, struct localisationPaquet* localisation);
+void incrNbPaquetDansFile(struct statNoeud* statNoeud, struct localisationPaquet* localisation);
+void decrNbPaquetDansFile(struct statNoeud* tabAssoc, struct localisationPaquet* localisation);
+void incrNbPerte(struct statNoeud* statNoeud, unsigned int noeud);
 
 #endif
 

@@ -7,5 +7,6 @@
 
 FILE* ouvertureTrace(char nomtrace[]);
 struct evt* nextEvt(FILE* fdTrace);
+unsigned int convPosToNum(char* pos);
 
 #endif

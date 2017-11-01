@@ -72,5 +72,5 @@ struct matriceAdj* loadMatriceAdjacence(char* fileMatrice)
 
 int debitLien(matrice mat,int i, int j)
 {
-	return (mat[i][j]<mat[j][i])? mat[j][i] : mat[i][j];
+	return (mat[i-1][j-1]<mat[j-1][i-1])? mat[j-1][i-1] : mat[i-1][j-1];
 }

@@ -117,35 +117,40 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 
 void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux* listeFlux)
 {
-	char* pos;
+	struct localisationPaquet* localisation;
 	struct listePaquet* listePaquet;
+
+	listePaquet = listePaquetOfFlux(evt,listeFlux);
+	//TODO verifier retour listePaquet
+	localisation = posOfNumPaquet(evt->pid, listePaquet);
+	/*XXX Utilisé des poiteur vers les paquets dans les noeuds, amélioration de la complexite*/
+	/*XXX pas performant*/
+
 	switch(evt->code)
 	{
 		case 0:
-			incrNbPaquetDansFile(statNoeud,evt->pos);
+			incrNbPaquetDansFile(statNoeud,localisation);
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 1:
-			incrNbPaquetDansFile(statNoeud,evt->pos);
+			incrNbPaquetDansFile(statNoeud,localisation);
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 2:
-			listePaquet = listePaquetOfFlux(evt,listeFlux);
-			//TODO verifier retour listePaquet
-			pos = posOfNumPaquet(evt->pid, listePaquet);
-			decrNbPaquetDansFile(statNoeud,pos);
+			decrNbPaquetDansFile(statNoeud,localisation);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 3:
-			decrNbPaquetDansFile(statNoeud,evt->pos);
+			decrNbPaquetDansFile(statNoeud,localisation);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
 			statNoeud->nbPaquetTotalDansFile--;
-//			setValTabAssoc(&(statG->tailleFile),evt->pos,statG->nbPaquetDansFile[evt->pos];
-			decrNbPaquetDansFile(statNoeud,evt->pos);
+			
+			setTailleFile(statNoeud,localisation);
+			decrNbPaquetDansFile(statNoeud,localisation);
 
-			incrNbPerte(statNoeud,evt->pos);
+			incrNbPerte(statNoeud,convPosToNum(evt->pos));
 			break;
 		
 	}
