@@ -87,30 +87,30 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux
 	switch(evt->code)
 	{
 		case 0:
-			incrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos,statNoeud->nbNoeud);
+			incrNbPaquetDansFile(statNoeud,evt->pos);
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 1:
-			incrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos,statNoeud->nbNoeud);
+			incrNbPaquetDansFile(statNoeud,evt->pos);
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 2:
 			listePaquet = listePaquetOfFlux(evt,listeFlux);
 			//TODO verifier retour listePaquet
 			pos = posOfNumPaquet(evt->pid, listePaquet);
-			decrTabAssoc(&(statNoeud->nbPaquetDansFile),pos);
+			decrNbPaquetDansFile(statNoeud,pos);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 3:
-			decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
+			decrNbPaquetDansFile(statNoeud,evt->pos);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
 			statNoeud->nbPaquetTotalDansFile--;
 //			setValTabAssoc(&(statG->tailleFile),evt->pos,statG->nbPaquetDansFile[evt->pos];
-			decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
+			decrNbPaquetDansFile(statNoeud,evt->pos);
 
-			incrTabAssoc(&(statNoeud->nbPerte),evt->pos,statNoeud->nbNoeud);
+			incrNbPerte(statNoeud,evt->pos);
 			break;
 		
 	}

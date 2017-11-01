@@ -16,9 +16,9 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud)
 
 	for(i=0;i<statNoeud->nbNoeud;i++)
 	{
-		if(i<statNoeud->nbPaquetDansFile.remplissage)
+		if(i<statNoeud->remplissage)
 		{
-			fprintf(fd,"%d ",statNoeud->nbPaquetDansFile.tab[i].entier);
+			fprintf(fd,"%d ",statNoeud->tabNoeud[i].nbPaquetDansFile);
 		}
 		else
 		{

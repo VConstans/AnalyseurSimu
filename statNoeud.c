@@ -4,42 +4,44 @@ void initStatNoeud(struct statNoeud* statNoeud, unsigned int nbNoeud)
 {
 	statNoeud->nbNoeud = nbNoeud;
 	statNoeud->nbPaquetTotalDansFile = 0;
-	statNoeud->nbPaquetDansFile.tab = (struct assocNoeudEntier*)malloc(nbNoeud*sizeof(struct assocNoeudEntier));
-	statNoeud->tailleFile.tab = (struct assocNoeudEntier*)malloc(nbNoeud*sizeof(struct assocNoeudEntier));
-	statNoeud->nbPerte.tab = (struct assocNoeudEntier*)malloc(nbNoeud*sizeof(struct assocNoeudEntier));
+	statNoeud->tabNoeud = (struct noeud*)malloc(nbNoeud*sizeof(struct noeud));
 
-	statNoeud->nbPaquetDansFile.remplissage=0;
-	statNoeud->tailleFile.remplissage=0;
-	statNoeud->nbPerte.remplissage=0;
+	statNoeud->remplissage=0;
 }
 
 
 
-void setValTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int val, unsigned int nbNoeud)
+void initNoeud(struct statNoeud* statNoeud,char* noeud)
+{
+	unsigned int index = statNoeud->remplissage;
+	int taille = strlen(noeud)+1;
+	statNoeud->tabNoeud[index].noeud = malloc(taille*sizeof(char));
+	strcpy(statNoeud->tabNoeud[index].noeud,noeud);
+	statNoeud->tabNoeud[index].nbPaquetDansFile=0;
+	statNoeud->tabNoeud[index].tailleFile=0;
+	statNoeud->tabNoeud[index].nbPerte=0;
+}
+
+void setTailleFile(struct statNoeud* statNoeud, char* noeud)
 {
 	unsigned int i;
 
-	for(i=0;i<tabAssoc->remplissage;i++)
+	for(i=0;i<statNoeud->remplissage;i++)
 	{
-		if(strcmp(tabAssoc->tab[i].noeud,noeud) == 0)
+		if(strcmp(statNoeud->tabNoeud[i].noeud,noeud) == 0)
 		{
-			printf("Reecriture\n");
-			tabAssoc->tab[i].entier=val;
+			statNoeud->tabNoeud[i].tailleFile=statNoeud->tabNoeud[i].nbPaquetDansFile;
 			return;
 		}
 	}
 
-	if(nbNoeud == tabAssoc->remplissage)
+	if(statNoeud->nbNoeud == statNoeud->remplissage)
 	{
 		printf("Erreur trop de noeud\n");
 	}
 	else
 	{
-		int taille = strlen(noeud)+1;
-		tabAssoc->tab[tabAssoc->remplissage].noeud = (char*) malloc(taille*sizeof(char));
-		strcpy(tabAssoc->tab[tabAssoc->remplissage].noeud,noeud);
-		tabAssoc->tab[tabAssoc->remplissage].entier=val;
-		tabAssoc->remplissage++;
+		printf("Erreur, noeud pas encore rencontré\n");
 	}
 }
 
@@ -47,48 +49,75 @@ void setValTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int val, un
 
 
 
-void incrTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int nbNoeud)
+void incrNbPaquetDansFile(struct statNoeud* statNoeud, char* noeud)
 {
 	unsigned int i;
 
-	for(i=0;i<tabAssoc->remplissage;i++)
+	for(i=0;i<statNoeud->remplissage;i++)
 	{
-		if(strcmp(tabAssoc->tab[i].noeud,noeud) == 0)
+		if(strcmp(statNoeud->tabNoeud[i].noeud,noeud) == 0)
 		{
-//			printf("Match %s %d\n",noeud,i);
-			tabAssoc->tab[i].entier++;
+			statNoeud->tabNoeud[i].nbPaquetDansFile++;
 			return;
 		}
 	}
 
-	if(nbNoeud == tabAssoc->remplissage)
+	if(statNoeud->nbNoeud == statNoeud->remplissage)
 	{
 		printf("Erreur trop de noeud\n");
 	}
 	else
 	{
-//		printf("Crée %s %d\n",noeud,tabAssoc->remplissage);
-		int taille = strlen(noeud)+1;
-		tabAssoc->tab[tabAssoc->remplissage].noeud = (char*) malloc(taille*sizeof(char));
-		strcpy(tabAssoc->tab[tabAssoc->remplissage].noeud,noeud);
-		tabAssoc->tab[tabAssoc->remplissage].entier=1;
-		tabAssoc->remplissage++;
+		initNoeud(statNoeud,noeud);
+
+		statNoeud->tabNoeud[statNoeud->remplissage].nbPaquetDansFile++;
+		statNoeud->nbPaquetTotalDansFile++;
+		statNoeud->remplissage++;
 	}
 }
 
 
-void decrTabAssoc(struct tabAssoc* tabAssoc, char* noeud)
+
+void decrNbPaquetDansFile(struct statNoeud* statNoeud, char* noeud)
 {
 	unsigned int i;
 
-	for(i=0;i<tabAssoc->remplissage;i++)
+	for(i=0;i<statNoeud->remplissage;i++)
 	{
-		if(strcmp(tabAssoc->tab[i].noeud,noeud) == 0)
+		if(strcmp(statNoeud->tabNoeud[i].noeud,noeud) == 0)
 		{
-			tabAssoc->tab[i].entier--;
+			statNoeud->tabNoeud[i].nbPaquetDansFile--;
 			return;
 		}
 	}
 
 	printf("Erreur decr sur noeud non sauvegarde\n");
+}
+
+
+
+void incrNbPerte(struct statNoeud* statNoeud, char* noeud)
+{
+	unsigned int i;
+
+	for(i=0;i<statNoeud->remplissage;i++)
+	{
+		if(strcmp(statNoeud->tabNoeud[i].noeud,noeud) == 0)
+		{
+			statNoeud->tabNoeud[i].nbPerte++;
+			return;
+		}
+	}
+
+	if(statNoeud->nbNoeud == statNoeud->remplissage)
+	{
+		printf("Erreur trop de noeud\n");
+	}
+	else
+	{
+		initNoeud(statNoeud,noeud);
+
+		statNoeud->tabNoeud[statNoeud->remplissage].nbPerte++;
+		statNoeud->remplissage++;
+	}
 }

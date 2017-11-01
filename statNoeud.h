@@ -6,31 +6,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct assocNoeudEntier
+struct noeud
 {
 	char* noeud;
-	unsigned int entier;
-};
-
-struct tabAssoc
-{
-	struct assocNoeudEntier* tab;
-	unsigned int remplissage;
+	unsigned int nbPaquetDansFile;
+	unsigned int tailleFile;
+	unsigned int nbPerte;
 };
 
 struct statNoeud
 {
 	unsigned int nbNoeud;
-	struct tabAssoc nbPaquetDansFile;
 	unsigned int nbPaquetTotalDansFile;
-	struct tabAssoc tailleFile;
-	struct tabAssoc nbPerte;
+	unsigned int remplissage;
+	struct noeud* tabNoeud;
 };
 
 
+
 void initStatNoeud(struct statNoeud* statNoeud, unsigned int nbNoeud);
-void setValTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int val, unsigned int nbNoeud);
-void incrTabAssoc(struct tabAssoc* tabAssoc, char* noeud, unsigned int nbNoeud);
-void decrTabAssoc(struct tabAssoc* tabAssoc, char* noeud);
+void initNoeud(struct statNoeud* statNoeud,char* noeud);
+void setTailleFile(struct statNoeud* statNoeud, char* noeud);
+void incrNbPaquetDansFile(struct statNoeud* statNoeud, char* noeud);
+void decrNbPaquetDansFile(struct statNoeud* tabAssoc, char* noeud);
+void incrNbPerte(struct statNoeud* statNoeud, char* noeud);
 
 #endif
+
