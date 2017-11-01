@@ -9,6 +9,37 @@ void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* list
 	//TODO autre analyse
 }
 
+void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, unsigned int fluxTracer)
+{
+	analyseFinalFlux(listeFlux,fluxTracer,statG);
+	//TODO autre analyse
+}
+
+void analyseFinalFlux(struct listeFlux* listeFlux,unsigned int fluxTracer, struct statGlobal* statG)
+{
+	struct flux* curseur = listeFlux->suivant;
+	double sommeDuree = 0;
+	unsigned int sommePaquet = 0;
+
+	while(curseur != NULL)
+	{
+		sommeDuree+=curseur->dureeMoyenne;
+		sommePaquet+=curseur->nbPaquet;
+
+		if(curseur->numFlux == fluxTracer)
+		{
+			printf("Nombre de paquets émis: %d\n",curseur->emis);
+			printf("Nombre de paquets recu: %d\n",curseur->recu);
+			printf("Nombre de paquets perdus: %d (taux de perte: %f)\n",curseur->perdu,(double)curseur->perdu/(double)curseur->emis);
+			printf("Durée de vie: %f\n",curseur->tempsFin - curseur->tempsDebut);
+			printf("Durée moyenne de bout en bout du flux %d: %f\n",curseur->numFlux,curseur->dureeMoyenne/(double)curseur->nbPaquet);
+		}
+	}
+
+	statG->dureeMoyenne = sommeDuree/(double)sommePaquet;
+}
+
+
 void analyseGlobal(int code, struct statGlobal* statG)
 {
 	switch(code)
@@ -53,6 +84,8 @@ void analyseEch(int code, struct statEch* statEch)
 void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 {
 	struct flux* flux = addFlux(evt,listeFlux);
+	struct paquet* paquet;
+	double duree;
 
 	switch(evt->code)
 	{
@@ -68,7 +101,9 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 		case 3:
 			updatePos(evt,flux->paquets);	//XXX utile?
 			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
-			setRecepPaquet(evt,flux->paquets);	//XXX utile?
+			paquet = setRecepPaquet(evt,flux->paquets);	//XXX utile?
+			duree = calculDuree(paquet,flux);
+			//XXX IF(paquet trace alors affiche)
 			//XXX durée de transmission avant del paquet
 			delPaquet(evt,flux->paquets);
 			break;

@@ -10,7 +10,8 @@ struct statGlobal
 	unsigned int paquetRecus;
 	unsigned int paquetPerdus;
 	unsigned int nbFlux;
-	unsigned int* locPerte;
+	unsigned int* locPerte;	//XXX utile?
+	double dureeMoyenne;
 	//XXX....
 };
 

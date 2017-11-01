@@ -13,6 +13,7 @@ struct flux
 	unsigned int recu;
 	unsigned int perdu;
 	unsigned int emis;
+	double dureeMoyenne;
 	double tempsDebut;
 	double tempsFin;
 	struct listePaquet* paquets;
@@ -27,5 +28,6 @@ struct listeFlux
 
 struct flux* addFlux(struct evt* evt,struct listeFlux* liste);
 struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFlux);
+double calculDuree(struct paquet* paquet, struct flux* flux);
 
 #endif

@@ -154,3 +154,13 @@ struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFl
 	
 	return NULL;
 }
+
+
+double calculDuree(struct paquet* paquet, struct flux* flux)
+{
+	double duree = paquet->emission - paquet->reception;
+
+	flux->dureeMoyenne+=duree;
+
+	return duree;
+}

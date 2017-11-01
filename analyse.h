@@ -14,5 +14,7 @@ void analyseGlobal(int code, struct statGlobal* statG);
 void analyseFlux(struct evt* evt, struct listeFlux* listeFlux);
 void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux* listeFlux);
 void analyseEch(int code, struct statEch* statEch);
+void analyseFinalFlux(struct listeFlux* listeFlux,unsigned int fluxTracer, struct statGlobal* statG);
+void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, unsigned int fluxTracer);
 
 #endif

@@ -22,7 +22,7 @@ struct listePaquet
 };
 
 void addAndSetEmissionPaquet(struct evt* evt, struct listePaquet* liste);
-void setRecepPaquet(struct evt* evt, struct listePaquet* liste);
+struct paquet* setRecepPaquet(struct evt* evt, struct listePaquet* liste);
 void updatePos(struct evt* evt, struct listePaquet* liste);
 char* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste);
 void delPaquet(struct evt* evt, struct listePaquet* liste);

@@ -83,13 +83,13 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 
 
 
-void setRecepPaquet(struct evt* evt, struct listePaquet* liste)
+struct paquet* setRecepPaquet(struct evt* evt, struct listePaquet* liste)
 {
 	//File vide
 	if(liste->suivant == NULL)
 	{
 		printf("Erreur: message pas encore émis\n");
-		return;
+		return NULL;
 	}
 
 	struct paquet* curseur = liste->suivant;
@@ -104,19 +104,19 @@ void setRecepPaquet(struct evt* evt, struct listePaquet* liste)
 		else if(evt->pid == curseur->numPaquet)
 		{
 			curseur->reception = evt->temps;
-			return;
+			return curseur;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{
 			printf("Erreur: message pas encore émis\n");
-			return;
+			return NULL;
 		}
 
 	}
 
 	//Insertion en fin de liste
 	printf("Erreur: message pas encore émis\n");
-	return;
+	return NULL;
 
 }
 
