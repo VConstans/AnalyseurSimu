@@ -4,7 +4,7 @@ void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* list
 {
 	analyseGlobal(evt->code,statG);
 	analyseFlux(evt,listeFlux);
-	analyseNoeud(evt,statNoeud);
+	analyseNoeud(evt,statNoeud,listeFlux);
 	analyseEch(evt->code,statEch);
 	//TODO autre analyse
 }
@@ -63,7 +63,7 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 			updatePos(evt,flux->paquets);
 			break;
 		case 2:
-			updatePos(evt,flux->paquets);	//XXX utile?
+	//		updatePos(evt,flux->paquets);	//XXX utile?
 			break;
 		case 3:
 			updatePos(evt,flux->paquets);	//XXX utile?
@@ -74,15 +74,16 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 			break;
 		case 4:
 			updatePos(evt,flux->paquets);	//XXX utile?
-			//XXX aussi delPaquet?
-	}//TODO autre analyse*/
+			setRecepPaquet(evt,flux->paquets);	//XXX utile?
+	}
 }
 
 
 
-void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux* listeFlux)
 {
 	char* pos;
+	struct listePaquet* listePaquet;
 	switch(evt->code)
 	{
 		case 0:
@@ -94,18 +95,20 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud)
 			statNoeud->nbPaquetTotalDansFile++;
 			break;
 		case 2:
-//			pos = posOfNumPaquet(evt->pid, listePaquet);
-//			decrTabAssoc(&(statNoeud->nbPaquetDansFile),pos);
+			listePaquet = listePaquetOfFlux(evt,listeFlux);
+			//TODO verifier retour listePaquet
+			pos = posOfNumPaquet(evt->pid, listePaquet);
+			decrTabAssoc(&(statNoeud->nbPaquetDansFile),pos);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 3:
-		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
+			decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
 			statNoeud->nbPaquetTotalDansFile--;
 //			setValTabAssoc(&(statG->tailleFile),evt->pos,statG->nbPaquetDansFile[evt->pos];
-		//	decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
+			decrTabAssoc(&(statNoeud->nbPaquetDansFile),evt->pos);
 
 			incrTabAssoc(&(statNoeud->nbPerte),evt->pos,statNoeud->nbNoeud);
 			break;

@@ -26,5 +26,6 @@ struct listeFlux
 };
 
 struct flux* addFlux(struct evt* evt,struct listeFlux* liste);
+struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFlux);
 
 #endif

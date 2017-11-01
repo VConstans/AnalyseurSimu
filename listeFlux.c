@@ -61,12 +61,12 @@ struct flux* addFlux(struct evt* evt,struct listeFlux* liste)
 		}
 		else if(evt->fid == curseur->numFlux)
 		{
-			curseur->nbPaquet++;
 
 			switch(evt->code)
 			{
 				case 0:
 					curseur->emis++;
+					curseur->nbPaquet++;
 					break;
 				case 3:
 					curseur->recu++;
@@ -116,4 +116,41 @@ struct flux* addFlux(struct evt* evt,struct listeFlux* liste)
 
 	liste->nbFlux++;
 	return maillon;
+}
+
+
+struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFlux)
+{
+	//File vide
+	if(listeFlux->suivant == NULL)
+	{
+		printf("Liste de flux vide\n");
+		return NULL;
+	}
+
+	struct flux* curseur = listeFlux->suivant;
+
+	//File non vide
+	while(curseur!=NULL)
+	{
+		if(evt->fid > curseur->numFlux)
+		{
+			curseur = curseur->suivant;
+		}
+		else if(evt->fid == curseur->numFlux)
+		{
+			return curseur->paquets;
+		}
+		else /*if(numFluxPaquet < curseur->numFlux)*/
+		{
+			printf("Liste de paquet introuvable\n");
+			return NULL;
+		}
+
+	}
+
+
+	printf("Liste de paquet introuvable\n");
+	
+	return NULL;
 }
