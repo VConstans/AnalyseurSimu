@@ -5,7 +5,7 @@
 struct localisationPaquet
 {
 	unsigned int noeud;
-	unsigned int file;
+	int file;
 };
 
 
