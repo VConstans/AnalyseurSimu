@@ -6,6 +6,7 @@
 #include "evt.h"
 #include "trace.h"
 #include "localisationPaquet.h"
+#include "statNoeud.h"
 
 struct paquet
 {
@@ -13,7 +14,7 @@ struct paquet
 	double emission;
 	double reception;
 	unsigned int pos;
-	unsigned int file;
+	int file;
 	struct paquet* suivant;
 };
 
@@ -23,9 +24,11 @@ struct listePaquet
 	struct paquet* suivant;
 };
 
-void addAndSetEmissionPaquet(struct evt* evt, struct listePaquet* liste);
+struct paquet* createPaquet(struct evt* evt,FILE* trace,struct statNoeud* statNoeud);
+int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud);
+void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud);
 struct paquet* setRecepPaquet(struct evt* evt, struct listePaquet* liste);
-void updatePos(struct evt* evt, struct listePaquet* liste);
+void updatePos(struct evt* evt, struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud);
 struct localisationPaquet* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste);
 void delPaquet(struct evt* evt, struct listePaquet* liste);
 

@@ -1,6 +1,6 @@
 #include "listePaquet.h"
 
-struct paquet* createPaquet(struct evt* evt)
+struct paquet* createPaquet(struct evt* evt,FILE* trace,struct statNoeud* statNoeud)
 {
 	struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
 
@@ -10,16 +10,18 @@ struct paquet* createPaquet(struct evt* evt)
 
 	maillon->pos = convPosToNum(evt->pos);
 
+	maillon->file = placementFile(maillon->numPaquet,trace,statNoeud);
+
 
 	return maillon;
 }
 
-void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
+void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud)
 {
 	//File vide
 	if(liste->suivant == NULL)
 	{
-		struct paquet* maillon = createPaquet(evt);
+		struct paquet* maillon = createPaquet(evt,trace, statNoeud);
 
 		maillon->suivant = NULL;
 
@@ -46,7 +48,7 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{
-			struct paquet* maillon = createPaquet(evt);
+			struct paquet* maillon = createPaquet(evt,trace,statNoeud);
 			maillon->suivant = curseur;
 
 			liste->nbPaquet++;
@@ -67,7 +69,7 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 	}
 
 	//Insertion en fin de liste
-	struct paquet* maillon = createPaquet(evt);
+	struct paquet* maillon = createPaquet(evt,trace,statNoeud);
 	maillon->pos = convPosToNum(evt->src);
 
 
@@ -119,7 +121,56 @@ struct paquet* setRecepPaquet(struct evt* evt, struct listePaquet* liste)
 }
 
 
-void updatePos(struct evt* evt, struct listePaquet* liste)
+int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud)
+{
+	long int backupPosition = ftell(trace);
+	struct evt* evtTmp = NULL;
+
+	do
+	{
+		if(evtTmp!=NULL)
+		{
+			free(evtTmp->src);
+			free(evtTmp->dst);
+			free(evtTmp->pos);
+			free(evtTmp);
+		}
+		evtTmp = nextEvt(trace);
+		
+	} while (evtTmp->pid != numPaquet);
+
+	int retour;
+
+	switch(evtTmp->code)
+	{
+		case 1:
+			//XXX pas de sens
+			break;
+		case 2:
+			retour = convPosToNum(evtTmp->pos);
+			break;
+		case 3:
+			retour = -1;
+			//XXX arrive a dest
+			break;
+		case 4:
+			retour = -1;
+			//TODO quel file?
+			break;
+	}
+
+	//TODO verifier si le lien entre les deux noeuds existe rellement
+	free(evtTmp->src);
+	free(evtTmp->dst);
+	free(evtTmp->pos);
+	free(evtTmp);
+
+	fseek(trace,backupPosition,SEEK_SET);
+
+	return retour;
+}
+
+void updatePos(struct evt* evt, struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud)
 {
 	//File vide
 	if(liste->suivant == NULL)
@@ -140,7 +191,8 @@ void updatePos(struct evt* evt, struct listePaquet* liste)
 		else if(evt->pid == curseur->numPaquet)
 		{
 			curseur->pos = convPosToNum(evt->pos);
-			//TODO update file
+
+			curseur->file = placementFile(curseur->numPaquet,trace,statNoeud);
 
 			return;
 		}
@@ -181,6 +233,8 @@ struct localisationPaquet* posOfNumPaquet(unsigned int numPaquet, struct listePa
 			struct localisationPaquet* localisation = (struct localisationPaquet*)malloc(sizeof(struct localisationPaquet));
 			localisation->noeud = curseur->pos;
 			localisation->file = curseur->file;
+			//TODO verifier si le lien entre les deux noeuds existe rellement
+			return localisation;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{

@@ -36,7 +36,10 @@ void initNoeud(struct noeud* noeud,unsigned int numNoeud,unsigned int nbNoeud, m
 
 void setTailleFile(struct statNoeud* statNoeud, struct localisationPaquet* localisation)
 {
-	statNoeud->tabNoeud[localisation->noeud].files[localisation->file].taille = statNoeud->tabNoeud[localisation->noeud].files[localisation->file].remplissage;
+	if(localisation->file != -1)
+	{
+		statNoeud->tabNoeud[localisation->noeud-1].files[localisation->file-1].taille = statNoeud->tabNoeud[localisation->noeud-1].files[localisation->file-1].remplissage;
+	}
 }
 
 
@@ -45,19 +48,25 @@ void setTailleFile(struct statNoeud* statNoeud, struct localisationPaquet* local
 
 void incrNbPaquetDansFile(struct statNoeud* statNoeud, struct localisationPaquet* localisation)
 {
-	statNoeud->tabNoeud[localisation->noeud].files[localisation->file].remplissage++;
+	if(localisation->file != -1)
+	{
+		statNoeud->tabNoeud[localisation->noeud-1].files[localisation->file-1].remplissage++;
+	}
 }
 
 
 
 void decrNbPaquetDansFile(struct statNoeud* statNoeud, struct localisationPaquet* localisation)
 {
-	statNoeud->tabNoeud[localisation->noeud].files[localisation->file].remplissage--;
+	if(localisation->file != -1)
+	{
+		statNoeud->tabNoeud[localisation->noeud-1].files[localisation->file-1].remplissage--;
+	}
 }
 
 
 
 void incrNbPerte(struct statNoeud* statNoeud, unsigned int noeud)
 {
-	statNoeud->tabNoeud[noeud].nbPerte++;
+	statNoeud->tabNoeud[noeud-1].nbPerte++;
 }

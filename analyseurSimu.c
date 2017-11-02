@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch,fdTrace);
 		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&statEch);
 
 

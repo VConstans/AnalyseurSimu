@@ -1,9 +1,9 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch, FILE* trace)
 {
 	analyseGlobal(evt->code,statG);
-	analyseFlux(evt,listeFlux);
+	analyseFlux(evt,listeFlux,trace,statNoeud);
 	analyseNoeud(evt,statNoeud,listeFlux);
 	analyseEch(evt->code,statEch);
 	//TODO autre analyse
@@ -81,7 +81,7 @@ void analyseEch(int code, struct statEch* statEch)
 }
 
 
-void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
+void analyseFlux(struct evt* evt, struct listeFlux* listeFlux,FILE* trace, struct statNoeud* statNoeud)
 {
 	struct flux* flux = addFlux(evt,listeFlux);
 	struct paquet* paquet;
@@ -90,25 +90,25 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 	switch(evt->code)
 	{
 		case 0:
-			addAndSetEmissionPaquet(evt,flux->paquets);
+			addAndSetEmissionPaquet(evt,flux->paquets,trace,statNoeud);
 			break;
 		case 1:
-			updatePos(evt,flux->paquets);
+			updatePos(evt,flux->paquets,trace,statNoeud);
 			break;
 		case 2:
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			break;
 		case 3:
-			updatePos(evt,flux->paquets);	//XXX utile?
+	//		updatePos(evt,flux->paquets);	//XXX utile?
 			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
 			paquet = setRecepPaquet(evt,flux->paquets);	//XXX utile?
 			duree = calculDuree(paquet,flux);
 			//XXX IF(paquet trace alors affiche)
 			//XXX durée de transmission avant del paquet
-			delPaquet(evt,flux->paquets);
+			//delPaquet(evt,flux->paquets);
 			break;
 		case 4:
-			updatePos(evt,flux->paquets);	//XXX utile?
+	//		updatePos(evt,flux->paquets);	//XXX utile?
 			setRecepPaquet(evt,flux->paquets);	//XXX utile?
 	}
 }
@@ -142,6 +142,7 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux
 			break;
 		case 3:
 			decrNbPaquetDansFile(statNoeud,localisation);
+			delPaquet(evt,listePaquet);
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
@@ -154,4 +155,7 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux
 			break;
 		
 	}
+
+
+	free(localisation);
 }
