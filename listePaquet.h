@@ -7,14 +7,14 @@
 #include "trace.h"
 #include "localisationPaquet.h"
 #include "statNoeud.h"
+#include "listePosition.h"
 
 struct paquet
 {
 	unsigned int numPaquet;
 	double emission;
 	double reception;
-	unsigned int pos;
-	int file;
+	struct listePosition* positions;
 	struct paquet* suivant;
 };
 
@@ -24,12 +24,14 @@ struct listePaquet
 	struct paquet* suivant;
 };
 
-struct paquet* createPaquet(struct evt* evt,FILE* trace,struct statNoeud* statNoeud);
-int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud);
-void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud);
-struct paquet* setRecepPaquet(struct evt* evt, struct listePaquet* liste);
-void updatePos(struct evt* evt, struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud);
-struct localisationPaquet* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste);
+struct paquet* createPaquet(struct evt* evt);
+//int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud);
+//void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud);
+struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste);
+struct paquet* searchPaquet(struct evt* evt, struct listePaquet* liste);
+void setRecepPaquet(struct evt* evt, struct paquet* paquet);
+void updatePos(struct paquet* paquet);
+struct localisationPaquet* posOfNumPaquet(struct paquet* paquet);
 void delPaquet(struct evt* evt, struct listePaquet* liste);
 
 #endif

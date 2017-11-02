@@ -1,6 +1,6 @@
 #include "listePaquet.h"
 
-struct paquet* createPaquet(struct evt* evt,FILE* trace,struct statNoeud* statNoeud)
+struct paquet* createPaquet(struct evt* evt)
 {
 	struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
 
@@ -8,45 +8,28 @@ struct paquet* createPaquet(struct evt* evt,FILE* trace,struct statNoeud* statNo
 
 	maillon->emission = evt->temps;
 
-	maillon->pos = convPosToNum(evt->pos);
-
-	maillon->file = placementFile(maillon->numPaquet,trace,statNoeud);
+	maillon->positions = initListePosition();
 
 
 	return maillon;
 }
 
-void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud)
+
+/*
+void setEmissionPaquet(struct evt* evt,struct listePaquet* liste)
 {
-	//File vide
-	if(liste->suivant == NULL)
-	{
-		struct paquet* maillon = createPaquet(evt,trace, statNoeud);
-
-		maillon->suivant = NULL;
-
-		liste->suivant=maillon;
-		liste->nbPaquet++;
-		return;
-	}
-
 	struct paquet* curseur = liste->suivant;
-	struct paquet* precedant = NULL;
 
 	//File non vide
 	while(curseur!=NULL)
 	{
-		if(evt->pid > curseur->numPaquet)
-		{
-			precedant = curseur;
-			curseur = curseur->suivant;
 		}
 		else if(evt->pid == curseur->numPaquet)
 		{
 			printf("Erreur, paquet déjà emis\n");
 			return;
 		}
-		else /*if(numFluxPaquet < curseur->numFlux)*/
+		else *if(numFluxPaquet < curseur->numFlux)
 		{
 			struct paquet* maillon = createPaquet(evt,trace,statNoeud);
 			maillon->suivant = curseur;
@@ -65,6 +48,7 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* tr
 				return;
 			}
 		}
+			curseur = curseur->suivant;
 
 	}
 
@@ -80,47 +64,99 @@ void addAndSetEmissionPaquet(struct evt* evt,struct listePaquet* liste, FILE* tr
 	return;
 }
 
+*/
 
 
-
-struct paquet* setRecepPaquet(struct evt* evt, struct listePaquet* liste)
+struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 {
 	//File vide
 	if(liste->suivant == NULL)
 	{
-		printf("Erreur: message pas encore émis\n");
-		return NULL;
+		struct paquet* maillon = createPaquet(evt);
+
+		maillon->suivant = NULL;
+
+		liste->suivant=maillon;
+		liste->nbPaquet++;
+		return maillon;
 	}
 
 	struct paquet* curseur = liste->suivant;
+	struct paquet* precedant = NULL;
 
 	//File non vide
 	while(curseur!=NULL)
 	{
 		if(evt->pid > curseur->numPaquet)
 		{
+			precedant = curseur;
 			curseur = curseur->suivant;
 		}
 		else if(evt->pid == curseur->numPaquet)
 		{
-			curseur->reception = evt->temps;
 			return curseur;
 		}
 		else /*if(numFluxPaquet < curseur->numFlux)*/
 		{
-			printf("Erreur: message pas encore émis\n");
-			return NULL;
+			struct paquet* maillon = createPaquet(evt);
+			maillon->suivant = curseur;
+
+			liste->nbPaquet++;
+
+			//Insertion en debut de liste
+			if(precedant == NULL)
+			{
+				liste->suivant = maillon;
+				return maillon;
+			}
+			else
+			{
+				precedant->suivant = maillon;
+				return maillon;
+			}
 		}
 
 	}
 
 	//Insertion en fin de liste
-	printf("Erreur: message pas encore émis\n");
-	return NULL;
+	struct paquet* maillon = createPaquet(evt);
 
+
+
+	maillon->suivant = NULL;
+	precedant->suivant = maillon;
+	liste->nbPaquet++;
+	return maillon;
 }
 
 
+
+struct paquet* searchPaquet(struct evt* evt, struct listePaquet* liste)
+{
+	struct paquet* curseur = liste->suivant;
+
+	//File non vide
+	while(curseur!=NULL)
+	{
+		if(evt->pid == curseur->numPaquet)
+		{
+			return curseur;
+		}
+		curseur = curseur->suivant;
+	}
+
+	return NULL;
+}
+
+
+
+
+void setRecepPaquet(struct evt* evt, struct paquet* paquet)
+{
+	paquet->reception = evt->temps;
+}
+
+/*
 int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud)
 {
 	long int backupPosition = ftell(trace);
@@ -170,83 +206,33 @@ int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud
 	return retour;
 }
 
-void updatePos(struct evt* evt, struct listePaquet* liste, FILE* trace, struct statNoeud* statNoeud)
+*/
+
+
+
+
+void updatePos(struct paquet* paquet)
 {
-	//File vide
-	if(liste->suivant == NULL)
+	if(paquet->positions->actuelle == NULL)
 	{
-		printf("Erreur: message pas encore émis\n");
-		return;
+		paquet->positions->actuelle = paquet->positions->debut;
 	}
-
-	struct paquet* curseur = liste->suivant;
-
-	//File non vide
-	while(curseur!=NULL)
+	else
 	{
-		if(evt->pid > curseur->numPaquet)
-		{
-			curseur = curseur->suivant;
-		}
-		else if(evt->pid == curseur->numPaquet)
-		{
-			curseur->pos = convPosToNum(evt->pos);
-
-			curseur->file = placementFile(curseur->numPaquet,trace,statNoeud);
-
-			return;
-		}
-		else /*if(numFluxPaquet < curseur->numFlux)*/
-		{
-			printf("Erreur: message pas encore émis\n");
-			return;
-		}
-
+		paquet->positions->actuelle = paquet->positions->actuelle->suivant;
 	}
-
-	//Insertion en fin de liste
-	printf("Erreur: message pas encore émis\n");
-	return;
 }
 
 
-struct localisationPaquet* posOfNumPaquet(unsigned int numPaquet, struct listePaquet* liste)
+
+struct localisationPaquet* posOfNumPaquet(struct paquet* paquet)
 {
-	//File vide
-	if(liste->suivant == NULL)
-	{
-		printf("Erreur: message pas encore émis\n");
-		return NULL;
-	}
+	struct localisationPaquet* localisation = (struct localisationPaquet*)malloc(sizeof(struct localisationPaquet));
 
-	struct paquet* curseur = liste->suivant;
+	localisation->noeud = paquet->positions->actuelle->numNoeud;
+	localisation->file = paquet->positions->actuelle->suivant->numNoeud;
 
-	//File non vide
-	while(curseur!=NULL)
-	{
-		if(numPaquet > curseur->numPaquet)
-		{
-			curseur = curseur->suivant;
-		}
-		else if(numPaquet == curseur->numPaquet)
-		{
-			struct localisationPaquet* localisation = (struct localisationPaquet*)malloc(sizeof(struct localisationPaquet));
-			localisation->noeud = curseur->pos;
-			localisation->file = curseur->file;
-			//TODO verifier si le lien entre les deux noeuds existe rellement
-			return localisation;
-		}
-		else /*if(numFluxPaquet < curseur->numFlux)*/
-		{
-			printf("Erreur: message pas encore émis\n");
-			return NULL;
-		}
-
-	}
-
-	//Insertion en fin de liste
-	printf("Erreur: message pas encore émis\n");
-	return NULL;
+	return localisation;
 }
 
 
@@ -300,3 +286,6 @@ void delPaquet(struct evt* evt, struct listePaquet* liste)
 	return;
 
 }
+
+
+

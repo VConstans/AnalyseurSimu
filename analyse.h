@@ -9,10 +9,10 @@
 #include "statEch.h"
 #include "listePaquet.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch, FILE* trace);
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch);
 void analyseGlobal(int code, struct statGlobal* statG);
-void analyseFlux(struct evt* evt, struct listeFlux* listeFlux,FILE* trace, struct statNoeud* statNoeud);
-void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux* listeFlux);
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux);
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* paquet);
 void analyseEch(int code, struct statEch* statEch);
 void analyseFinalFlux(struct listeFlux* listeFlux,unsigned int fluxTracer, struct statGlobal* statG);
 void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, unsigned int fluxTracer);

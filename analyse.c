@@ -1,10 +1,12 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch, FILE* trace)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch)
 {
+	struct paquet* paquet;
+
 	analyseGlobal(evt->code,statG);
-	analyseFlux(evt,listeFlux,trace,statNoeud);
-	analyseNoeud(evt,statNoeud,listeFlux);
+	paquet = analyseFlux(evt,listeFlux);
+	analyseNoeud(evt,statNoeud,paquet);
 	analyseEch(evt->code,statEch);
 	//TODO autre analyse
 }
@@ -81,19 +83,21 @@ void analyseEch(int code, struct statEch* statEch)
 }
 
 
-void analyseFlux(struct evt* evt, struct listeFlux* listeFlux,FILE* trace, struct statNoeud* statNoeud)
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 {
-	struct flux* flux = addFlux(evt,listeFlux);
-	struct paquet* paquet;
+	struct flux* flux = traitementFlux(evt,listeFlux);
+	struct paquet* paquet = searchPaquet(evt, flux->paquets);
 	double duree;
 
 	switch(evt->code)
 	{
 		case 0:
-			addAndSetEmissionPaquet(evt,flux->paquets,trace,statNoeud);
+			updatePos(paquet);
+	//		addAndSetEmissionPaquet(evt,flux->paquets,trace,statNoeud);
+			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
 			break;
 		case 1:
-			updatePos(evt,flux->paquets,trace,statNoeud);
+			updatePos(paquet);
 			break;
 		case 2:
 	//		updatePos(evt,flux->paquets);	//XXX utile?
@@ -101,7 +105,7 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux,FILE* trace, struc
 		case 3:
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
-			paquet = setRecepPaquet(evt,flux->paquets);	//XXX utile?
+			setRecepPaquet(evt,paquet);	//XXX utile?
 			duree = calculDuree(paquet,flux);
 			//XXX IF(paquet trace alors affiche)
 			//XXX durée de transmission avant del paquet
@@ -109,22 +113,19 @@ void analyseFlux(struct evt* evt, struct listeFlux* listeFlux,FILE* trace, struc
 			break;
 		case 4:
 	//		updatePos(evt,flux->paquets);	//XXX utile?
-			setRecepPaquet(evt,flux->paquets);	//XXX utile?
+			setRecepPaquet(evt,paquet);	//XXX mettre a jour
 	}
+
+	return paquet;
 }
 
 
 
-void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux* listeFlux)
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* paquet)
 {
 	struct localisationPaquet* localisation;
-	struct listePaquet* listePaquet;
 
-	listePaquet = listePaquetOfFlux(evt,listeFlux);
-	//TODO verifier retour listePaquet
-	localisation = posOfNumPaquet(evt->pid, listePaquet);
-	/*XXX Utilisé des poiteur vers les paquets dans les noeuds, amélioration de la complexite*/
-	/*XXX pas performant*/
+	localisation = posOfNumPaquet(paquet);
 
 	switch(evt->code)
 	{
@@ -142,7 +143,8 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct listeFlux
 			break;
 		case 3:
 			decrNbPaquetDansFile(statNoeud,localisation);
-			delPaquet(evt,listePaquet);
+			//delPaquet(evt,listePaquet);
+			//XXX optimisation mémoire: supprimer les paquets au fur et à mesure
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:

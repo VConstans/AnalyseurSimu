@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "evt.h"
 #include "listePaquet.h"
+#include "listePosition.h"
 
 struct flux
 {
@@ -26,8 +27,11 @@ struct listeFlux
 	struct flux* suivant;
 };
 
+struct flux* createFlux(struct evt* evt);
 struct flux* addFlux(struct evt* evt,struct listeFlux* liste);
+struct flux* traitementFlux(struct evt* evt,struct listeFlux* liste);
 struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFlux);
 double calculDuree(struct paquet* paquet, struct flux* flux);
+void initTrace(struct listeFlux* listeFlux,FILE* fdTrace);
 
 #endif
