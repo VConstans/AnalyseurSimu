@@ -9,29 +9,17 @@ int main(int argc, char* argv[])
 	struct evt* newEvt;
 
 	struct statGlobal stat;
-	stat.paquetEmis=0;
-	stat.arriveInter=0;
-	stat.departFile=0;
-	stat.paquetRecus=0;
-	stat.paquetPerdus=0;
-	stat.nbFlux=0;
-	stat.locPerte=NULL;
 
 	struct listeFlux flux;
-	flux.nbFlux=0;
-	flux.suivant = NULL;
 
 	struct statNoeud statNoeud;
-	initStatNoeud(&statNoeud,matAdj->nbNoeud,matAdj->mat);
 
 	struct statEch statEch;
-	statEch.nbPaquetTransit = 0;
 
 	struct fd dataOutput;
-	dataOutput.remplissageFile = fopen("remplissageFile.out","w+");
-	dataOutput.paquetTransit = fopen("paquetTransit.out","w+");
 
 
+	initAnalyse(&stat,&flux,&statNoeud,&statEch,&dataOutput,matAdj);
 
 	initTrace(&flux,fdTrace);
 
@@ -58,4 +46,26 @@ int main(int argc, char* argv[])
 
 
 	return 0;
+}
+
+
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct statEch* statEch, struct fd* dataOutput, struct matriceAdj* matAdj)
+{
+	statG->paquetEmis=0;
+	statG->arriveInter=0;
+	statG->departFile=0;
+	statG->paquetRecus=0;
+	statG->paquetPerdus=0;
+	statG->nbFlux=0;
+	statG->locPerte=NULL;
+
+	flux->nbFlux=0;
+	flux->suivant = NULL;
+
+	initStatNoeud(statNoeud,matAdj->nbNoeud,matAdj->mat);
+
+	statEch->nbPaquetTransit = 0;
+
+	dataOutput->remplissageFile = fopen("remplissageFile.out","w+");
+	dataOutput->paquetTransit = fopen("paquetTransit.out","w+");
 }

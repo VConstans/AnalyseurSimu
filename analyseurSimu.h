@@ -16,5 +16,6 @@
 
 
 int main(int argc, char* argv[]);
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct statEch* statEch, struct fd* dataOutput,struct matriceAdj* matAdj);
 
 #endif
