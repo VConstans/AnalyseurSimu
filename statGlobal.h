@@ -12,6 +12,7 @@ struct statGlobal
 	unsigned int nbFlux;
 	unsigned int* locPerte;	//XXX utile?
 	double dureeMoyenne;
+	unsigned int nbPaquetTransit;
 	//XXX....
 };
 

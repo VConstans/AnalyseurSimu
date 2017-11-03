@@ -15,8 +15,9 @@ int main(int argc, char* argv[])
 	opt.traceFlux = NONE;
 	opt.echFile = NONE;
 	opt.echFileDetail = NONE;
+	opt.echTransit = NONE;
 
-	while((arg=getopt(argc,argv,"i:m:p:x:f:F:")) != -1)
+	while((arg=getopt(argc,argv,"i:m:p:x:f:F:t")) != -1)
 	{
 		switch(arg)
 		{
@@ -60,6 +61,9 @@ int main(int argc, char* argv[])
 				}
 
 				break;
+			case 't':
+				opt.echTransit = ACTIVE;
+				break;
 			default:
 				printf("Erreur, option non valide\n");
 				exit(-1);
@@ -79,12 +83,10 @@ int main(int argc, char* argv[])
 
 	struct statNoeud statNoeud;
 
-	struct statEch statEch;
-
 	struct fd dataOutput;
 
 
-	initAnalyse(&stat,&flux,&statNoeud,&statEch,&dataOutput,matAdj);
+	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj);
 
 	initTrace(&flux,fdTrace);
 
@@ -93,8 +95,8 @@ int main(int argc, char* argv[])
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch,&opt);
-		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&statEch,&opt);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt);
+		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&stat,&opt);
 
 
 		if(ancienEvt!=NULL)
@@ -116,7 +118,7 @@ int main(int argc, char* argv[])
 }
 
 
-void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct statEch* statEch, struct fd* dataOutput, struct matriceAdj* matAdj)
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput, struct matriceAdj* matAdj)
 {
 	statG->paquetEmis=0;
 	statG->arriveInter=0;
@@ -125,13 +127,12 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	statG->paquetPerdus=0;
 	statG->nbFlux=0;
 	statG->locPerte=NULL;
+	statG->nbPaquetTransit = 0;
 
 	flux->nbFlux=0;
 	flux->suivant = NULL;
 
 	initStatNoeud(statNoeud,matAdj->nbNoeud,matAdj->mat);
-
-	statEch->nbPaquetTransit = 0;
 
 	dataOutput->remplissageFile = fopen("remplissageFile.out","w+");
 	dataOutput->paquetTransit = fopen("paquetTransit.out","w+");

@@ -1,13 +1,12 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch, struct option* opt)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt)
 {
 	struct paquet* paquet;
 
 	analyseGlobal(evt->code,statG);
 	paquet = analyseFlux(evt,listeFlux);
 	analyseNoeud(evt,statNoeud,paquet);
-	analyseEch(evt->code,statEch);
 	//TODO autre analyse
 }
 
@@ -51,6 +50,7 @@ void analyseGlobal(int code, struct statGlobal* statG)
 	{
 		case 0:
 			statG->paquetEmis++;
+			statG->nbPaquetTransit++;
 			break;
 		case 1:
 			statG->arriveInter++;
@@ -60,28 +60,13 @@ void analyseGlobal(int code, struct statGlobal* statG)
 			break;
 		case 3:
 			statG->paquetRecus++;
+			statG->nbPaquetTransit--;
 			break;
 		case 4:
 			statG->paquetPerdus++;
+			statG->nbPaquetTransit--;
 			break;
 		
-	}
-}
-
-
-void analyseEch(int code, struct statEch* statEch)
-{
-	switch(code)
-	{
-		case 0:
-			statEch->nbPaquetTransit++;
-			break;
-		case 3:
-			statEch->nbPaquetTransit--;
-			break;
-		case 4:
-			statEch->nbPaquetTransit--;
-			break;
 	}
 }
 

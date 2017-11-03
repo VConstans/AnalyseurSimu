@@ -9,12 +9,14 @@ struct option
 	int traceFlux;
 	int echFile;
 	int echFileDetail;
+	int echTransit;
 };
 
 
 #define ALL -2
 #define SUM -3
 #define NONE -1
+#define ACTIVE -4
 
 
 #include <stdio.h>
@@ -33,7 +35,7 @@ struct option
 
 
 int main(int argc, char* argv[]);
-void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct statEch* statEch, struct fd* dataOutput,struct matriceAdj* matAdj);
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput,struct matriceAdj* matAdj);
 
 
 #endif

@@ -3,10 +3,13 @@
 int header =1;
 
 
-void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, struct statEch* statEch, struct option* opt)
+void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, struct statGlobal* statG, struct option* opt)
 {
 	courbeRemplissageFile(fds->remplissageFile,temps,statNoeud,opt);
-	courbePaquetTransit(fds->paquetTransit,temps,statEch);
+	if(opt->echTransit == ACTIVE)
+	{
+		courbePaquetTransit(fds->paquetTransit,temps,statG);
+	}
 	//TODO autre output
 }
 
@@ -101,9 +104,9 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 	}
 }
 
-void courbePaquetTransit(FILE* fd,double temps, struct statEch* statEch)
+void courbePaquetTransit(FILE* fd,double temps, struct statGlobal* statG)
 {
 	fprintf(fd,"%f ",temps);
 
-	fprintf(fd,"%d\n",statEch->nbPaquetTransit);
+	fprintf(fd,"%d\n",statG->nbPaquetTransit);
 }
