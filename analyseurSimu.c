@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt,&dataOutput);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt,&dataOutput,matAdj);
 		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&stat,&flux,&opt);
 
 

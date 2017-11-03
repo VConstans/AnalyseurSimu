@@ -1,11 +1,17 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds)
+double tempsEstimationTaille;
+double estimationTaille;
+int condEstimationTaille = 1;
+
+
+
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj)
 {
 	struct paquet* paquet;
 
 	analyseGlobal(evt->code,statG);
-	paquet = analyseFlux(evt,listeFlux,opt,fds,statG);
+	paquet = analyseFlux(evt,listeFlux,opt,fds,statG,matAdj);
 	analyseNoeud(evt,statNoeud,paquet);
 	//TODO autre analyse
 }
@@ -74,37 +80,47 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds,struct statGlobal* statG)
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj)
 {
 	struct flux* flux = traitementFlux(evt,listeFlux);
 	struct paquet* paquet = searchPaquet(evt, flux->paquets);
 	double duree;
 	double delai;
+	unsigned int noeudTmp, noeudTmp2;
+	int debitTmp;
 
 	switch(evt->code)
 	{
 		case 0:
+			if(opt->tracePaquet == (int)evt->pid)
+			{
+				printf("---------------------TRACAGE DU PAQUET %d-----------------------\n",opt->tracePaquet);
+				printf("Source: %s\n",evt->src);
+				printf("Destination: %s\n\n",evt->dst);
+			}
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
-				printf("Départ du noeud %s à temps %f\n",evt->pos,evt->temps);
+				printf("Départ du noeud %s à temps \t\t%f\n",evt->pos,evt->temps);
 			}
 			setActualTemps(evt,paquet);
 			updatePos(paquet);
 	//		addAndSetEmissionPaquet(evt,flux->paquets,trace,statNoeud);
 			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
-
-			if(opt->tracePaquet == (int)evt->pid)
-			{
-				printf("Source: %s\n",evt->src);
-				printf("Destination: %s\n",evt->dst);
-			}
-
 			break;
 		case 1:
 			duree = updateTempsLien(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
-				printf("Arrivé sur le noeud %s à temps %f\nTemps passé sur le lien: %f\n",evt->pos,evt->temps,duree);
+				if(condEstimationTaille)
+				{
+					sscanf(evt->pos,"N%d",&noeudTmp);
+					sscanf(evt->src,"N%d",&noeudTmp2);
+					debitTmp=debitLien(matAdj->mat,noeudTmp2,noeudTmp);
+					delai=evt->temps - tempsEstimationTaille;
+					estimationTaille=(double)debitTmp*delai;
+					condEstimationTaille=0;
+				}
+				printf("Temps passé sur le lien: \t\t%f\nArrivé sur le noeud %s à temps   \t%f\n",duree,evt->pos,evt->temps);
 			}
 			updatePos(paquet);
 			break;
@@ -112,7 +128,13 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			duree = updateTempsFile(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
-				printf("Temps passé sur le lien: %f\n",duree);
+				if(condEstimationTaille)
+				{
+					sscanf(evt->pos,"N%d",&noeudTmp);
+					tempsEstimationTaille=evt->temps;
+				}
+
+				printf("Temps passé dans la liste: \t\t%f\n",duree);
 			}
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			break;
@@ -120,11 +142,12 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			setRecepDatePaquet(evt->temps,paquet);	//XXX utile?
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
-				printf("Arrivé à destination (%s) à temps %f\n",evt->pos,evt->temps);
+				printf("Arrivé à destination (%s) à temps \t%f\n",evt->pos,evt->temps);
 				delai = calculDuree(paquet,flux);
-				printf("Delai d'acheminement: %f\n",delai);
+				printf("\nDelai d'acheminement: %f\n",delai);
 				printf("Temps passé dans les files: %f\n",paquet->tempsFile);
 				printf("Temps passé sur les liens: %f\n",paquet->tempsLien);
+				printf("Taille du paquet: %f\n",estimationTaille);
 				printf("\n\n----------------------------------------------\n\n");
 			}
 			addTemps(statG,paquet);
