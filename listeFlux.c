@@ -104,11 +104,23 @@ struct flux* traitementFlux(struct evt* evt,struct listeFlux* liste)
 				case 0:
 					curseur->emis++;
 					curseur->nbPaquet++;
+					if(evt->temps == curseur->tempsDebut)
+					{
+						liste->nbFluxActif++;
+					}
 					break;
 				case 3:
+					if(evt->temps == curseur->tempsFin)
+					{
+						liste->nbFluxActif--;
+					}
 					curseur->recu++;
 					break;
 				case 4:
+					if(evt->temps == curseur->tempsFin)
+					{
+						liste->nbFluxActif--;
+					}
 					curseur->perdu++;
 					break;
 			}

@@ -24,6 +24,7 @@ struct flux
 struct listeFlux
 {
 	unsigned int nbFlux;
+	unsigned int nbFluxActif;
 	struct flux* suivant;
 };
 

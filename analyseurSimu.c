@@ -131,7 +131,8 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 
 	flux->nbFlux=0;
 	flux->suivant = NULL;
-
+	flux->nbFluxActif = 0;
+	
 	initStatNoeud(statNoeud,matAdj->nbNoeud,matAdj->mat);
 
 	dataOutput->remplissageFile = fopen("remplissageFile.out","w+");
