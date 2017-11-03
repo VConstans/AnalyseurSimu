@@ -121,3 +121,9 @@ void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux)
 	fprintf(fd,"%f ",temps);
 	fprintf(fd,"%d\n",listeFlux->nbFluxActif);
 }
+
+
+void courbeDelaiPaquet(FILE* fd,unsigned int pid,double delai)
+{
+	fprintf(fd,"%d %f\n",pid,delai);
+}

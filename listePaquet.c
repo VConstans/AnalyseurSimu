@@ -151,9 +151,9 @@ struct paquet* searchPaquet(struct evt* evt, struct listePaquet* liste)
 
 
 
-void setRecepPaquet(struct evt* evt, struct paquet* paquet)
+void setRecepDatePaquet(double temps, struct paquet* paquet)
 {
-	paquet->reception = evt->temps;
+	paquet->reception = temps;
 }
 
 /*

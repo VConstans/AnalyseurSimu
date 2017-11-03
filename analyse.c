@@ -1,11 +1,11 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds)
 {
 	struct paquet* paquet;
 
 	analyseGlobal(evt->code,statG);
-	paquet = analyseFlux(evt,listeFlux);
+	paquet = analyseFlux(evt,listeFlux,opt,fds);
 	analyseNoeud(evt,statNoeud,paquet);
 	//TODO autre analyse
 }
@@ -34,7 +34,7 @@ void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct sta
 			printf("Nombre de paquets recu: %d\n",curseur->recu);
 			printf("Nombre de paquets perdus: %d (taux de perte: %f)\n",curseur->perdu,(double)curseur->perdu/(double)curseur->emis);
 			printf("Durée de vie: %f\n",curseur->tempsFin - curseur->tempsDebut);
-			printf("Durée moyenne de bout en bout du flux %d: %f\n",curseur->numFlux,curseur->dureeMoyenne/(double)curseur->nbPaquet);
+			printf("Durée moyenne de bout en bout du flux %d: %f\n",curseur->numFlux,curseur->dureeMoyenne/(double)curseur->recu);
 		}
 
 		curseur = curseur->suivant;
@@ -71,7 +71,7 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds)
 {
 	struct flux* flux = traitementFlux(evt,listeFlux);
 	struct paquet* paquet = searchPaquet(evt, flux->paquets);
@@ -93,15 +93,21 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux)
 		case 3:
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
-			setRecepPaquet(evt,paquet);	//XXX utile?
-			duree = calculDuree(paquet,flux);
+			setRecepDatePaquet(evt->temps,paquet);	//XXX utile?
+
+			//TODO
+			if(opt->echDelai != NONE && opt->echDelai == (int)evt->fid)
+			{
+				duree = calculDuree(paquet,flux);
+				courbeDelaiPaquet(fds->delaiPaquet,paquet->numPaquet,duree);
+			}
 			//XXX IF(paquet trace alors affiche)
 			//XXX durée de transmission avant del paquet
 			//delPaquet(evt,flux->paquets);
 			break;
 		case 4:
 	//		updatePos(evt,flux->paquets);	//XXX utile?
-			setRecepPaquet(evt,paquet);	//XXX mettre a jour
+			setRecepDatePaquet(-1,paquet);	//XXX mettre a jour
 	}
 
 	return paquet;

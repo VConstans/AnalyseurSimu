@@ -11,6 +11,7 @@ struct option
 	int echFileDetail;
 	int echTransit;
 	int echFluxActif;
+	int echDelai;
 };
 
 
