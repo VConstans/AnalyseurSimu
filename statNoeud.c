@@ -78,3 +78,14 @@ void incrNbPerte(struct statNoeud* statNoeud, unsigned int noeud)
 {
 	statNoeud->tabNoeud[noeud-1].nbPerte++;
 }
+
+
+void printNbPerte(struct statNoeud* statNoeud)
+{
+	printf("Nombre de perte par noeud\n");
+	unsigned int i;
+	for(i=0;i<statNoeud->nbNoeud;i++)
+	{
+		printf("noeud N%d: %d\n",statNoeud->tabNoeud[i].numNoeud, statNoeud->tabNoeud[i].nbPerte);
+	}
+}

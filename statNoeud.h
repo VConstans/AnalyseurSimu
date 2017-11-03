@@ -35,6 +35,7 @@ void setTailleFile(struct statNoeud* statNoeud, struct localisationPaquet* local
 void incrNbPaquetDansFile(struct statNoeud* statNoeud, struct localisationPaquet* localisation);
 void decrNbPaquetDansFile(struct statNoeud* tabAssoc, struct localisationPaquet* localisation);
 void incrNbPerte(struct statNoeud* statNoeud, unsigned int noeud);
+void printNbPerte(struct statNoeud* statNoeud);
 
 #endif
 

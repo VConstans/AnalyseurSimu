@@ -124,11 +124,12 @@ int main(int argc, char* argv[])
 	analyseFinale(&stat,&flux,&opt);
 
 
-	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d\nNb flux %d",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
+	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
 	printf("Délai moyen de bout en bout: %f\n",stat.dureeMoyenne);
 	printf("Temps d'attente cumulé dans les files: %f\n",stat.tempsFile);
 	printf("Temps d'attente cumulé dans les liens: %f\n",stat.tempsLien);
 
+	printNbPerte(&statNoeud);
 
 	return 0;
 }
