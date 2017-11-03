@@ -19,6 +19,7 @@ void initStatNoeud(struct statNoeud* statNoeud, unsigned int nbNoeud, matrice ma
 void initNoeud(struct noeud* noeud,unsigned int numNoeud,unsigned int nbNoeud, matrice matAdj)
 {
 	noeud->numNoeud = numNoeud;
+	noeud->nbPaquetDansFile = 0;
 	noeud->tailleFile=0;
 	noeud->nbPerte=0;
 
@@ -51,6 +52,7 @@ void incrNbPaquetDansFile(struct statNoeud* statNoeud, struct localisationPaquet
 	if(localisation->file != -1)
 	{
 		statNoeud->tabNoeud[localisation->noeud-1].files[localisation->file-1].remplissage++;
+		statNoeud->tabNoeud[localisation->noeud-1].nbPaquetDansFile++;
 	}
 }
 
@@ -61,6 +63,7 @@ void decrNbPaquetDansFile(struct statNoeud* statNoeud, struct localisationPaquet
 	if(localisation->file != -1)
 	{
 		statNoeud->tabNoeud[localisation->noeud-1].files[localisation->file-1].remplissage--;
+		statNoeud->tabNoeud[localisation->noeud-1].nbPaquetDansFile--;
 	}
 }
 

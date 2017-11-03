@@ -1,6 +1,6 @@
 #include "analyse.h"
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct statEch* statEch, struct option* opt)
 {
 	struct paquet* paquet;
 
@@ -11,13 +11,13 @@ void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* list
 	//TODO autre analyse
 }
 
-void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, unsigned int fluxTracer)
+void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt)
 {
-	analyseFinalFlux(listeFlux,fluxTracer,statG);
+	analyseFinalFlux(listeFlux,opt,statG);
 	//TODO autre analyse
 }
 
-void analyseFinalFlux(struct listeFlux* listeFlux,unsigned int fluxTracer, struct statGlobal* statG)
+void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct statGlobal* statG)
 {
 	struct flux* curseur = listeFlux->suivant;
 	double sommeDuree = 0;
@@ -28,7 +28,8 @@ void analyseFinalFlux(struct listeFlux* listeFlux,unsigned int fluxTracer, struc
 		sommeDuree+=curseur->dureeMoyenne;
 		sommePaquet+=curseur->nbPaquet;
 
-		if(curseur->numFlux == fluxTracer)
+		//XXX compraison entre signed et unsigned
+		if(curseur->numFlux == (unsigned)opt->traceFlux)
 		{
 			printf("Nombre de paquets émis: %d\n",curseur->emis);
 			printf("Nombre de paquets recu: %d\n",curseur->recu);
@@ -36,6 +37,8 @@ void analyseFinalFlux(struct listeFlux* listeFlux,unsigned int fluxTracer, struc
 			printf("Durée de vie: %f\n",curseur->tempsFin - curseur->tempsDebut);
 			printf("Durée moyenne de bout en bout du flux %d: %f\n",curseur->numFlux,curseur->dureeMoyenne/(double)curseur->nbPaquet);
 		}
+
+		curseur = curseur->suivant;
 	}
 
 	statG->dureeMoyenne = sommeDuree/(double)sommePaquet;

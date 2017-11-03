@@ -2,9 +2,9 @@
 
 i=2
 
-echo "set key outside" >> /tmp/remplissageFile$$
+echo "set off" >> /tmp/remplissageFile$$
 
-while [ $i -le 28 ]
+while [ $i -le 27 ]
 do
 	if [ $i -eq 2 ]
 	then

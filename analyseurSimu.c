@@ -2,9 +2,74 @@
 
 int main(int argc, char* argv[])
 {
-	FILE* fdTrace = ouvertureTrace(argv[1]);
+	if(argc < 5)
+	{
+		printf("Usage: %s -i <trace_file> -m <matrice_file> [-p trace_packet] [-f trace_flux]\n",argv[0]);
+		exit(-1);
+	}
 
-	struct matriceAdj* matAdj = loadMatriceAdjacence(argv[2]);
+	int arg;
+
+	struct option opt;
+	opt.tracePaquet = NONE;
+	opt.traceFlux = NONE;
+	opt.echFile = NONE;
+	opt.echFileDetail = NONE;
+
+	while((arg=getopt(argc,argv,"i:m:p:x:f:F:")) != -1)
+	{
+		switch(arg)
+		{
+			case 'i':
+				//opt.traceFile = (char*)malloc(strlen(optarg)*sizeof(char*));
+				opt.traceFile = optarg;
+				break;
+			case 'm':
+				//opt.matriceFile = (char*)malloc(strlen(optarg)*sizeof(char*));
+				opt.matriceFile = optarg;
+				break;
+			case 'p':
+				opt.tracePaquet = atoi(optarg);
+				break;
+			case 'x':
+				opt.traceFlux = atoi(optarg);
+				break;
+			case 'f':
+				if(strcmp(optarg,"sum") == 0)
+				{
+					opt.echFile = SUM;
+				}
+				else if(strcmp(optarg,"all") == 0)
+				{
+					opt.echFile = ALL;
+				}
+				else
+				{
+					opt.echFile = atoi(optarg)-1;
+				}
+
+				break;
+			case 'F':
+				if(strcmp(optarg,"all") == 0)
+				{
+					opt.echFileDetail = ALL;
+				}
+				else
+				{
+					opt.echFileDetail = atoi(optarg)-1;
+				}
+
+				break;
+			default:
+				printf("Erreur, option non valide\n");
+				exit(-1);
+				break;
+		}
+	}
+
+	FILE* fdTrace = ouvertureTrace(opt.traceFile);
+
+	struct matriceAdj* matAdj = loadMatriceAdjacence(opt.matriceFile);
 
 	struct evt* newEvt;
 
@@ -28,8 +93,8 @@ int main(int argc, char* argv[])
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch);
-		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&statEch);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&statEch,&opt);
+		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&statEch,&opt);
 
 
 		if(ancienEvt!=NULL)
@@ -40,6 +105,8 @@ int main(int argc, char* argv[])
 			free(ancienEvt);
 		}
 	}
+
+	analyseFinale(&stat,&flux,&opt);
 
 
 	printf("Paquet Emis %u\nArrivé noeud inter %u\nDepart fille %u\nPaquet Recus %u\nPaquet perdus %u\nNb flux %u",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);

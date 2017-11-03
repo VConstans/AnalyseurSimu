@@ -113,7 +113,6 @@ struct flux* traitementFlux(struct evt* evt,struct listeFlux* liste)
 					break;
 			}
 			
-			curseur->tempsFin = evt->temps;
 
 			return curseur;
 		}
