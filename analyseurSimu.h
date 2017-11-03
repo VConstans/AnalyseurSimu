@@ -12,6 +12,7 @@ struct option
 	int echTransit;
 	int echFluxActif;
 	int echDelai;
+	int echPerdu;
 };
 
 

@@ -18,9 +18,10 @@ int main(int argc, char* argv[])
 	opt.echTransit = NONE;
 	opt.echFluxActif = NONE;
 	opt.echDelai = NONE;
+	opt.echPerdu = NONE;
 
 
-	while((arg=getopt(argc,argv,"i:m:p:x:f:F:tad:")) != -1)
+	while((arg=getopt(argc,argv,"i:m:p:x:f:F:tad:P")) != -1)
 	{
 		switch(arg)
 		{
@@ -72,6 +73,9 @@ int main(int argc, char* argv[])
 				break;
 			case 'd':
 				opt.echDelai = atoi(optarg);
+				break;
+			case 'P':
+				opt.echPerdu = ACTIVE;
 				break;
 			default:
 				printf("Erreur, option non valide\n");
@@ -148,4 +152,5 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	dataOutput->paquetTransit = fopen("paquetTransit.out","w+");
 	dataOutput->fluxActif = fopen("fluxActif.out","w+");
 	dataOutput->delaiPaquet = fopen("delaiPaquet.out","w+");
+	dataOutput->paquetPerdu = fopen("paquetPerdu.out","w+");
 }

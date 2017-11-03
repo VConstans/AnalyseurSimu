@@ -14,6 +14,10 @@ void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, 
 	{
 		courbeFluxActif(fds->fluxActif,temps,listeFlux);
 	}
+	if(opt->echPerdu == ACTIVE)
+	{
+		courbePaquetPerdu(fds->paquetPerdu,temps,statG);
+	}
 	//TODO autre output
 }
 
@@ -126,4 +130,9 @@ void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux)
 void courbeDelaiPaquet(FILE* fd,unsigned int pid,double delai)
 {
 	fprintf(fd,"%d %f\n",pid,delai);
+}
+
+void courbePaquetPerdu(FILE* fd,double temps,struct statGlobal* statG)
+{
+	fprintf(fd,"%f %d\n",temps,statG->paquetPerdus);
 }

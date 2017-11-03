@@ -10,6 +10,7 @@ struct fd
 	FILE* paquetTransit;
 	FILE* fluxActif;
 	FILE* delaiPaquet;
+	FILE* paquetPerdu;
 };
 
 #endif

@@ -12,6 +12,7 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 void courbePaquetTransit(FILE* fd,double temps,struct statGlobal* statG);
 void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux);
 void courbeDelaiPaquet(FILE* fd,unsigned int pid,double delai);
+void courbePaquetPerdu(FILE* fd,double temps,struct statGlobal* statG);
 
 
 #endif
