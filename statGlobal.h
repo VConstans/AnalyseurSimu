@@ -1,6 +1,8 @@
 #ifndef __STATGLOBAL_H__
 #define __STATGLOBAL_H__
 
+#include "listePaquet.h"
+
 
 struct statGlobal
 {
@@ -12,8 +14,13 @@ struct statGlobal
 	unsigned int nbFlux;
 	unsigned int* locPerte;	//XXX utile?
 	double dureeMoyenne;
+	double tempsFile;
+	double tempsLien;
 	unsigned int nbPaquetTransit;
 	//XXX....
 };
+
+
+void addTemps(struct statGlobal* statG, struct paquet* paquet);
 
 #endif

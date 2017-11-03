@@ -124,7 +124,10 @@ int main(int argc, char* argv[])
 	analyseFinale(&stat,&flux,&opt);
 
 
-	printf("Paquet Emis %u\nArrivé noeud inter %u\nDepart fille %u\nPaquet Recus %u\nPaquet perdus %u\nNb flux %u",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
+	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d\nNb flux %d",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
+	printf("Délai moyen de bout en bout: %f\n",stat.dureeMoyenne);
+	printf("Temps d'attente cumulé dans les files: %f\n",stat.tempsFile);
+	printf("Temps d'attente cumulé dans les liens: %f\n",stat.tempsLien);
 
 
 	return 0;
@@ -141,6 +144,8 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	statG->nbFlux=0;
 	statG->locPerte=NULL;
 	statG->nbPaquetTransit = 0;
+	statG->tempsFile = 0;
+	statG->tempsLien = 0;
 
 	flux->nbFlux=0;
 	flux->suivant = NULL;

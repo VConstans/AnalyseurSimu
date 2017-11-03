@@ -5,7 +5,7 @@ void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* list
 	struct paquet* paquet;
 
 	analyseGlobal(evt->code,statG);
-	paquet = analyseFlux(evt,listeFlux,opt,fds);
+	paquet = analyseFlux(evt,listeFlux,opt,fds,statG);
 	analyseNoeud(evt,statNoeud,paquet);
 	//TODO autre analyse
 }
@@ -41,6 +41,9 @@ void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct sta
 	}
 
 	statG->dureeMoyenne = sommeDuree/(double)sommePaquet;
+
+
+	printf("\n\n----------------------------------------------\n\n");
 }
 
 
@@ -71,41 +74,82 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds)
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds,struct statGlobal* statG)
 {
 	struct flux* flux = traitementFlux(evt,listeFlux);
 	struct paquet* paquet = searchPaquet(evt, flux->paquets);
 	double duree;
+	double delai;
 
 	switch(evt->code)
 	{
 		case 0:
+			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
+			{
+				printf("Départ du noeud %s à temps %f\n",evt->pos,evt->temps);
+			}
+			setActualTemps(evt,paquet);
 			updatePos(paquet);
 	//		addAndSetEmissionPaquet(evt,flux->paquets,trace,statNoeud);
 			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
+
+			if(opt->tracePaquet == (int)evt->pid)
+			{
+				printf("Source: %s\n",evt->src);
+				printf("Destination: %s\n",evt->dst);
+			}
+
 			break;
 		case 1:
+			duree = updateTempsLien(evt,paquet);
+			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
+			{
+				printf("Arrivé sur le noeud %s à temps %f\nTemps passé sur le lien: %f\n",evt->pos,evt->temps,duree);
+			}
 			updatePos(paquet);
 			break;
 		case 2:
+			duree = updateTempsFile(evt,paquet);
+			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
+			{
+				printf("Temps passé sur le lien: %f\n",duree);
+			}
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			break;
 		case 3:
+			setRecepDatePaquet(evt->temps,paquet);	//XXX utile?
+			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
+			{
+				printf("Arrivé à destination (%s) à temps %f\n",evt->pos,evt->temps);
+				delai = calculDuree(paquet,flux);
+				printf("Delai d'acheminement: %f\n",delai);
+				printf("Temps passé dans les files: %f\n",paquet->tempsFile);
+				printf("Temps passé sur les liens: %f\n",paquet->tempsLien);
+				printf("\n\n----------------------------------------------\n\n");
+			}
+			addTemps(statG,paquet);
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
-			setRecepDatePaquet(evt->temps,paquet);	//XXX utile?
 
 			//TODO
 			if(opt->echDelai != NONE && opt->echDelai == (int)evt->fid)
 			{
-				duree = calculDuree(paquet,flux);
-				courbeDelaiPaquet(fds->delaiPaquet,paquet->numPaquet,duree);
+				delai = calculDuree(paquet,flux);
+				courbeDelaiPaquet(fds->delaiPaquet,paquet->numPaquet,delai);
 			}
 			//XXX IF(paquet trace alors affiche)
 			//XXX durée de transmission avant del paquet
 			//delPaquet(evt,flux->paquets);
 			break;
 		case 4:
+			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
+			{
+				printf("Destruction du paquet au noeud %s à temps %f\n",evt->pos,evt->temps);
+				printf("Temps passé dans les files: %f\n",paquet->tempsFile);
+				printf("Temps passé sur les liens: %f\n",paquet->tempsLien);
+				printf("\n\n----------------------------------------------\n\n");
+			}
+			addTemps(statG,paquet);
 	//		updatePos(evt,flux->paquets);	//XXX utile?
 			setRecepDatePaquet(-1,paquet);	//XXX mettre a jour
 	}

@@ -12,7 +12,7 @@
 
 void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds);
 void analyseGlobal(int code, struct statGlobal* statG);
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux,struct option* opt,struct fd* fds);
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux,struct option* opt,struct fd* fds,struct statGlobal* statG);
 void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* paquet);
 void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct statGlobal* statG);
 void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt);

@@ -8,6 +8,9 @@ struct paquet* createPaquet(struct evt* evt)
 
 	maillon->emission = evt->temps;
 
+	maillon->tempsFile = 0;
+	maillon->tempsLien = 0;
+
 	maillon->positions = initListePosition();
 
 
@@ -288,4 +291,25 @@ void delPaquet(struct evt* evt, struct listePaquet* liste)
 }
 
 
+void setActualTemps(struct evt* evt, struct paquet* paquet)
+{
+	paquet->tempsTmp = evt->temps;
+}
 
+double updateTempsFile(struct evt* evt, struct paquet* paquet)
+{
+	double duree = evt->temps - paquet->tempsTmp;
+	paquet->tempsFile+=duree;
+	setActualTemps(evt,paquet);
+
+	return duree;
+}
+
+double updateTempsLien(struct evt* evt, struct paquet* paquet)
+{
+	double duree = evt->temps - paquet->tempsTmp;
+	paquet->tempsLien+=duree;
+	setActualTemps(evt,paquet);
+
+	return duree;
+}
