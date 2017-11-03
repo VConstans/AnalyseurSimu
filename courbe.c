@@ -1,5 +1,7 @@
 #include "courbe.h"
 
+int header =1;
+
 
 void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, struct statEch* statEch, struct option* opt)
 {
@@ -16,6 +18,11 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 	}
 	else if(opt->echFile == SUM)
 	{
+		if(header)
+		{
+			fprintf(fd,"1\n");
+			header = 0;
+		}
 		fprintf(fd,"%f ",temps);
 
 		fprintf(fd,"%d\n",statNoeud->nbPaquetTotalDansFile);
@@ -24,6 +31,11 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 	}
 	else if(opt->echFile == ALL)
 	{
+		if(header)
+		{
+			fprintf(fd,"%d\n",statNoeud->nbNoeud);
+			header=0;
+		}
 		fprintf(fd,"%f ",temps);
 
 		unsigned int i;
@@ -40,14 +52,23 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 	{
 		if(opt->echFileDetail == NONE)
 		{
+			if(header)
+			{
+				fprintf(fd,"1\n");
+				header = 0;
+			}
 			fprintf(fd,"%f ",temps);
 			fprintf(fd,"%d\n",statNoeud->tabNoeud[opt->echFile].nbPaquetDansFile);
-			printf("%d\n",statNoeud->tabNoeud[opt->echFile].numNoeud);
 
 			return;
 		}
 		else if(opt->echFileDetail == ALL)
 		{
+			if(header)
+			{
+				fprintf(fd,"%d\n",statNoeud->tabNoeud[opt->echFile].nbLien);
+				header = 0;
+			}
 			fprintf(fd,"%f ",temps);
 
 			unsigned int i;
@@ -59,15 +80,21 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 					fprintf(fd,"%d ",statNoeud->tabNoeud[opt->echFile].files[i].remplissage);
 				}
 			}
+			fprintf(fd,"\n");
 			return;
 		}
 		else
 		{
-			fprintf(fd,"%f ",temps);
+			if(header)
+			{
+				fprintf(fd,"1\n");
+				header = 0;
+			}
 
 			if(statNoeud->tabNoeud[opt->echFile].files[opt->echFileDetail].debit != 0)
 			{
-				fprintf(fd,"%d ",statNoeud->tabNoeud[opt->echFile].files[opt->echFileDetail].remplissage);
+				fprintf(fd,"%f ",temps);
+				fprintf(fd,"%d\n",statNoeud->tabNoeud[opt->echFile].files[opt->echFileDetail].remplissage);
 			}
 			return;
 		}

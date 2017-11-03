@@ -13,6 +13,7 @@ struct noeud
 {
 	unsigned int numNoeud;
 	unsigned int nbPaquetDansFile;
+	unsigned int nbLien;
 	unsigned int tailleFile;
 	unsigned int nbPerte;
 	struct file* files;

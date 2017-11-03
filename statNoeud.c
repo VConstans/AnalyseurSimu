@@ -22,16 +22,21 @@ void initNoeud(struct noeud* noeud,unsigned int numNoeud,unsigned int nbNoeud, m
 	noeud->nbPaquetDansFile = 0;
 	noeud->tailleFile=0;
 	noeud->nbPerte=0;
+	noeud->nbLien = 0;
 
 	noeud->files = (struct file*)malloc(nbNoeud*sizeof(struct file));
 
 	unsigned int i;
-	for(i=1;i<nbNoeud;i++)
+	for(i=0;i<nbNoeud;i++)
 	{
-		noeud->files[i].dest = i;
+		noeud->files[i].dest = i+1;
 		noeud->files[i].taille = 0;
 		noeud->files[i].remplissage = 0;
-		noeud->files[i].debit = debitLien(matAdj,numNoeud,i);
+		noeud->files[i].debit = debitLien(matAdj,numNoeud,i+1);
+		if(noeud->files[i].debit != 0)
+		{
+			noeud->nbLien++;
+		}
 	}
 }
 
