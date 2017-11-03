@@ -10,6 +10,7 @@ struct option
 	int echFile;
 	int echFileDetail;
 	int echTransit;
+	int echFluxActif;
 };
 
 

@@ -8,6 +8,7 @@ struct fd
 {
 	FILE* remplissageFile;
 	FILE* paquetTransit;
+	FILE* fluxActif;
 };
 
 #endif

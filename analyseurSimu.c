@@ -16,8 +16,9 @@ int main(int argc, char* argv[])
 	opt.echFile = NONE;
 	opt.echFileDetail = NONE;
 	opt.echTransit = NONE;
+	opt.echFluxActif = NONE;
 
-	while((arg=getopt(argc,argv,"i:m:p:x:f:F:t")) != -1)
+	while((arg=getopt(argc,argv,"i:m:p:x:f:F:ta")) != -1)
 	{
 		switch(arg)
 		{
@@ -64,6 +65,9 @@ int main(int argc, char* argv[])
 			case 't':
 				opt.echTransit = ACTIVE;
 				break;
+			case'a':
+				opt.echFluxActif = ACTIVE;
+				break;
 			default:
 				printf("Erreur, option non valide\n");
 				exit(-1);
@@ -96,7 +100,7 @@ int main(int argc, char* argv[])
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
 		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt);
-		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&stat,&opt);
+		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&stat,&flux,&opt);
 
 
 		if(ancienEvt!=NULL)
@@ -137,4 +141,5 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 
 	dataOutput->remplissageFile = fopen("remplissageFile.out","w+");
 	dataOutput->paquetTransit = fopen("paquetTransit.out","w+");
+	dataOutput->fluxActif = fopen("fluxActif.out","w+");
 }

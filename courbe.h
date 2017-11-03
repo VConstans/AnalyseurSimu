@@ -7,9 +7,10 @@
 #include "fd.h"
 #include "analyseurSimu.h"
 
-void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, struct statGlobal* statG, struct option* opt);
+void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, struct statGlobal* statG, struct listeFlux* listeFlux,struct option* opt);
 void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, struct option* opt);
 void courbePaquetTransit(FILE* fd,double temps,struct statGlobal* statG);
+void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux);
 
 
 #endif
