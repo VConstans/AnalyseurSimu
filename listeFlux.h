@@ -15,6 +15,7 @@ struct flux
 	unsigned int perdu;
 	unsigned int emis;
 	double dureeMoyenne;
+	double dureeCarreMoyenne;
 	double tempsDebut;
 	double tempsFin;
 	struct listePaquet* paquets;

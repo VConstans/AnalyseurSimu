@@ -11,6 +11,7 @@
 #include "courbe.h"
 #include "matrice.h"
 #include "listeLien.h"
+#include <math.h>
 
 void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj,struct listeLien* listeLien);
 void analyseGlobal(int code, struct statGlobal* statG);

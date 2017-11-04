@@ -13,6 +13,7 @@ struct flux* createFlux(struct evt* evt)
 	maillon->paquets->suivant=NULL;
 	maillon->paquets->nbPaquet=0;
 	maillon->dureeMoyenne = 0;
+	maillon->dureeCarreMoyenne = 0;
 
 	maillon->tempsDebut = evt->temps;
 	maillon->tempsFin = evt->temps;
@@ -188,6 +189,7 @@ double calculDuree(struct paquet* paquet, struct flux* flux)
 		double duree = paquet->reception - paquet->emission;
 
 		flux->dureeMoyenne+=duree;
+		flux->dureeCarreMoyenne+=duree*duree;
 
 		return duree;
 	}

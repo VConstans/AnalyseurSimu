@@ -37,6 +37,7 @@ struct option
 #include "courbe.h"
 #include <string.h>
 #include "listeLien.h"
+#include <math.h>
 
 
 int main(int argc, char* argv[]);

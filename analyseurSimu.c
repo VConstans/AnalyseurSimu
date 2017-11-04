@@ -130,8 +130,13 @@ int main(int argc, char* argv[])
 	analyseFinale(&stat,&flux,&opt,&dataOutput,&listeLien);
 
 
-	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
+	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d (taux de perte %f%%)\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,(double)stat.paquetPerdus/(double)stat.paquetEmis,flux.nbFlux);
 	printf("Délai moyen de bout en bout: %f\n",stat.dureeMoyenne);
+	printf("Ecart type: %f\n",stat.ecartType);
+	printf("Variance: %f\n",stat.ecartType*stat.ecartType);
+	printf("Intervalle de confiance à 68%%: [%f , %f]\n",stat.dureeMoyenne-stat.ecartType,stat.dureeMoyenne+stat.ecartType);
+	printf("Intervalle de confiance à 95%%: [%f , %f]\n",stat.dureeMoyenne-2*stat.ecartType,stat.dureeMoyenne+2*stat.ecartType);
+	printf("Intervalle de confiance à 99%%: [%f , %f]\n",stat.dureeMoyenne-3*stat.ecartType,stat.dureeMoyenne+3*stat.ecartType);
 	printf("Temps d'attente cumulé dans les files: %f\n",stat.tempsFile);
 	printf("Temps d'attente cumulé dans les liens: %f\n",stat.tempsLien);
 
@@ -153,6 +158,9 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	statG->nbPaquetTransit = 0;
 	statG->tempsFile = 0;
 	statG->tempsLien = 0;
+	statG->dureeMoyenne=0;
+	statG->dureeCarreMoyenne=0;
+	statG->ecartType = 0;
 
 	flux->nbFlux=0;
 	flux->suivant = NULL;

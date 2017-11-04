@@ -30,27 +30,41 @@ void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct sta
 {
 	struct flux* curseur = listeFlux->suivant;
 	double sommeDuree = 0;
+	double sommeCarreDuree = 0;
 	unsigned int sommePaquet = 0;
 
 	while(curseur != NULL)
 	{
 		sommeDuree+=curseur->dureeMoyenne;
-		sommePaquet+=curseur->nbPaquet;
+		sommeCarreDuree+=curseur->dureeCarreMoyenne;
+		sommePaquet+=curseur->recu;
 
 		//XXX compraison entre signed et unsigned
 		if(curseur->numFlux == (unsigned)opt->traceFlux)
 		{
 			printf("Nombre de paquets émis: %d\n",curseur->emis);
 			printf("Nombre de paquets recu: %d\n",curseur->recu);
-			printf("Nombre de paquets perdus: %d (taux de perte: %f)\n",curseur->perdu,(double)curseur->perdu/(double)curseur->emis);
+			printf("Nombre de paquets perdus: %d (taux de perte: %f%%)\n",curseur->perdu,(double)curseur->perdu/(double)curseur->emis);
 			printf("Durée de vie: %f\n",curseur->tempsFin - curseur->tempsDebut);
-			printf("Durée moyenne de bout en bout du flux %d: %f\n",curseur->numFlux,curseur->dureeMoyenne/(double)curseur->recu);
+
+			double ecartType = (sqrt(curseur->dureeCarreMoyenne*(double)(curseur->recu) - curseur->dureeMoyenne*curseur->dureeMoyenne))/(double)(curseur->recu);
+
+			double dureeMoyenne = curseur->dureeMoyenne/(double)curseur->recu;
+
+			printf("Durée moyenne de bout en bout du flux %d: %f\n",curseur->numFlux,dureeMoyenne);
+			printf("Ecart type: %f\n",ecartType);
+			printf("Variance: %f\n",ecartType*ecartType);
+			printf("Intervalle de confiance à 68%%: [%f , %f]\n",dureeMoyenne-ecartType,dureeMoyenne+ecartType);
+			printf("Intervalle de confiance à 95%%: [%f , %f]\n",dureeMoyenne-2*ecartType,dureeMoyenne+2*ecartType);
+			printf("Intervalle de confiance à 99%%: [%f , %f]\n",dureeMoyenne-3*ecartType,dureeMoyenne+3*ecartType);
+
 		}
 
 		curseur = curseur->suivant;
 	}
 
 	statG->dureeMoyenne = sommeDuree/(double)sommePaquet;
+	statG->ecartType = (sqrt(sommeCarreDuree*(double)(sommePaquet) - sommeDuree*sommeDuree))/(double)(sommePaquet);
 
 
 	printf("\n\n----------------------------------------------\n\n");
