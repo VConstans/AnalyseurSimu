@@ -79,7 +79,7 @@ void delPaquetInLien(struct listeLien* listeLien, unsigned int ext1, unsigned in
 						curseur->tempsOccupe += (evt->temps - curseur->tempsTmp);
 					}
 
-					free(curseur);
+					free(curseurPaquet);
 
 					if(precedant ==NULL)
 					{
