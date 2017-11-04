@@ -113,9 +113,11 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
 			break;
 		case 1:
-			localisation = posOfNumPaquet(paquet);
-			delPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
-
+			if(opt->echLien == ACTIVE)
+			{
+				localisation = posOfNumPaquet(paquet);
+				delPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
+			}
 			duree = updateTempsLien(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
@@ -133,9 +135,11 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			updatePos(paquet);
 			break;
 		case 2:
-			localisation = posOfNumPaquet(paquet);
-			addPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
-
+			if(opt->echLien == ACTIVE)
+			{
+				localisation = posOfNumPaquet(paquet);
+				addPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
+			}
 			duree = updateTempsFile(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
