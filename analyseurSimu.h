@@ -13,6 +13,7 @@ struct option
 	int echFluxActif;
 	int echDelai;
 	int echPerdu;
+	int echLien;
 };
 
 
@@ -35,10 +36,11 @@ struct option
 #include "analyse.h"
 #include "courbe.h"
 #include <string.h>
+#include "listeLien.h"
 
 
 int main(int argc, char* argv[]);
-void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput,struct matriceAdj* matAdj);
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput,struct matriceAdj* matAdj,struct listeLien* listeLien);
 
 
 #endif

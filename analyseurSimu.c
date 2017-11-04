@@ -19,9 +19,10 @@ int main(int argc, char* argv[])
 	opt.echFluxActif = NONE;
 	opt.echDelai = NONE;
 	opt.echPerdu = NONE;
+	opt.echLien = NONE;
 
 
-	while((arg=getopt(argc,argv,"i:m:p:x:f:F:tad:P")) != -1)
+	while((arg=getopt(argc,argv,"i:m:p:x:f:F:tad:Pl")) != -1)
 	{
 		switch(arg)
 		{
@@ -77,6 +78,9 @@ int main(int argc, char* argv[])
 			case 'P':
 				opt.echPerdu = ACTIVE;
 				break;
+			case 'l':
+				opt.echLien = ACTIVE;
+				break;
 			default:
 				printf("Erreur, option non valide\n");
 				exit(-1);
@@ -98,8 +102,10 @@ int main(int argc, char* argv[])
 
 	struct fd dataOutput;
 
+	struct listeLien listeLien;
 
-	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj);
+
+	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj,&listeLien);
 
 	initTrace(&flux,fdTrace);
 
@@ -108,7 +114,7 @@ int main(int argc, char* argv[])
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt,&dataOutput,matAdj);
+		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt,&dataOutput,matAdj,&listeLien);
 		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&stat,&flux,&opt);
 
 
@@ -121,7 +127,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	analyseFinale(&stat,&flux,&opt);
+	analyseFinale(&stat,&flux,&opt,&dataOutput,&listeLien);
 
 
 	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,flux.nbFlux);
@@ -135,7 +141,7 @@ int main(int argc, char* argv[])
 }
 
 
-void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput, struct matriceAdj* matAdj)
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput, struct matriceAdj* matAdj, struct listeLien* listeLien)
 {
 	statG->paquetEmis=0;
 	statG->arriveInter=0;
@@ -159,4 +165,7 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	dataOutput->fluxActif = fopen("fluxActif.out","w+");
 	dataOutput->delaiPaquet = fopen("delaiPaquet.out","w+");
 	dataOutput->paquetPerdu = fopen("paquetPerdu.out","w+");
+	dataOutput->utilisationLien = fopen("utilisationLien.out","w+");
+
+	initListeLien(listeLien,matAdj);
 }

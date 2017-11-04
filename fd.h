@@ -11,6 +11,7 @@ struct fd
 	FILE* fluxActif;
 	FILE* delaiPaquet;
 	FILE* paquetPerdu;
+	FILE* utilisationLien;
 };
 
 #endif

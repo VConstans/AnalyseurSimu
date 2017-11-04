@@ -136,3 +136,15 @@ void courbePaquetPerdu(FILE* fd,double temps,struct statGlobal* statG)
 {
 	fprintf(fd,"%f %d\n",temps,statG->paquetPerdus);
 }
+
+void courbeUtilisationLien(FILE* fd, struct listeLien* listeLien)
+{
+	struct lien* curseur = listeLien->liens;
+
+	while(curseur !=NULL)
+	{
+		fprintf(fd,"%d-%d %f\n",curseur->ext1,curseur->ext2,curseur->tempsOccupe);
+
+		curseur = curseur->suivant;
+	}
+}

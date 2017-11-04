@@ -6,19 +6,23 @@ int condEstimationTaille = 1;
 
 
 
-void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj)
+void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj,struct listeLien* listeLien)
 {
 	struct paquet* paquet;
 
 	analyseGlobal(evt->code,statG);
-	paquet = analyseFlux(evt,listeFlux,opt,fds,statG,matAdj);
+	paquet = analyseFlux(evt,listeFlux,opt,fds,statG,matAdj,listeLien);
 	analyseNoeud(evt,statNoeud,paquet);
 	//TODO autre analyse
 }
 
-void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt)
+void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt,struct fd* fds, struct listeLien* listeLien)
 {
 	analyseFinalFlux(listeFlux,opt,statG);
+	if(opt->echLien == ACTIVE)
+	{
+		courbeUtilisationLien(fds->utilisationLien,listeLien);
+	}
 	//TODO autre analyse
 }
 
@@ -80,7 +84,7 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj)
+struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien)
 {
 	struct flux* flux = traitementFlux(evt,listeFlux);
 	struct paquet* paquet = searchPaquet(evt, flux->paquets);
@@ -88,6 +92,7 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 	double delai;
 	unsigned int noeudTmp, noeudTmp2;
 	int debitTmp;
+	struct localisationPaquet* localisation;
 
 	switch(evt->code)
 	{
@@ -108,6 +113,9 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
 			break;
 		case 1:
+			localisation = posOfNumPaquet(paquet);
+			delPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
+
 			duree = updateTempsLien(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
@@ -125,6 +133,9 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			updatePos(paquet);
 			break;
 		case 2:
+			localisation = posOfNumPaquet(paquet);
+			addPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
+
 			duree = updateTempsFile(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
