@@ -3,7 +3,6 @@
 i=2
 nbColonne=`head -n 1 remplissageFile.out`
 nbColonne=$(($nbColonne+1))
-echo $nbColonne
 
 echo "set off" >> /tmp/remplissageFile$$
 
