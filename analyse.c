@@ -170,9 +170,9 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
 
 			//TODO
+			delai = calculDuree(paquet,flux);
 			if(opt->echDelai != NONE && opt->echDelai == (int)evt->fid)
 			{
-				delai = calculDuree(paquet,flux);
 				courbeDelaiPaquet(fds->delaiPaquet,paquet->numPaquet,delai);
 			}
 			//XXX IF(paquet trace alors affiche)

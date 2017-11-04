@@ -12,6 +12,7 @@ struct flux* createFlux(struct evt* evt)
 	maillon->paquets = (struct listePaquet*)malloc(sizeof(struct listePaquet));
 	maillon->paquets->suivant=NULL;
 	maillon->paquets->nbPaquet=0;
+	maillon->dureeMoyenne = 0;
 
 	maillon->tempsDebut = evt->temps;
 	maillon->tempsFin = evt->temps;
