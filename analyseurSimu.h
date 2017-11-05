@@ -41,7 +41,7 @@ struct option
 
 
 int main(int argc, char* argv[]);
-void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput,struct matriceAdj* matAdj,struct listeLien* listeLien);
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput,struct matriceAdj* matAdj,struct listeLien* listeLien, struct option* opt);
 
 
 #endif

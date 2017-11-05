@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
 	struct listeLien listeLien;
 
 
-	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj,&listeLien);
+	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj,&listeLien,&opt);
 
 	initTrace(&flux,fdTrace);
 
@@ -146,7 +146,7 @@ int main(int argc, char* argv[])
 }
 
 
-void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput, struct matriceAdj* matAdj, struct listeLien* listeLien)
+void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput, struct matriceAdj* matAdj, struct listeLien* listeLien,struct option* opt)
 {
 	statG->paquetEmis=0;
 	statG->arriveInter=0;
@@ -168,12 +168,30 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	
 	initStatNoeud(statNoeud,matAdj->nbNoeud,matAdj->mat);
 
-	dataOutput->remplissageFile = fopen("remplissageFile.out","w+");
-	dataOutput->paquetTransit = fopen("paquetTransit.out","w+");
-	dataOutput->fluxActif = fopen("fluxActif.out","w+");
-	dataOutput->delaiPaquet = fopen("delaiPaquet.out","w+");
-	dataOutput->paquetPerdu = fopen("paquetPerdu.out","w+");
-	dataOutput->utilisationLien = fopen("utilisationLien.out","w+");
+	if(opt->echFile != NONE)
+	{
+		dataOutput->remplissageFile = fopen("remplissageFile.out","w+");
+	}
+	if(opt->echTransit != NONE)
+	{
+		dataOutput->paquetTransit = fopen("paquetTransit.out","w+");
+	}
+	if(opt->echFluxActif != NONE)
+	{
+		dataOutput->fluxActif = fopen("fluxActif.out","w+");
+	}
+	if(opt->echDelai != NONE)
+	{
+		dataOutput->delaiPaquet = fopen("delaiPaquet.out","w+");
+	}
+	if(opt->echPerdu != NONE)
+	{
+		dataOutput->paquetPerdu = fopen("paquetPerdu.out","w+");
+	}
+	if(opt->echLien != NONE)
+	{
+		dataOutput->utilisationLien = fopen("utilisationLien.out","w+");
+	}
 
 	initListeLien(listeLien,matAdj);
 }
