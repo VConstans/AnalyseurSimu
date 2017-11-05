@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 	analyseFinale(&stat,&flux,&opt,&dataOutput,&listeLien);
 
 
-	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d (taux de perte %f%%)\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,(double)stat.paquetPerdus/(double)stat.paquetEmis,flux.nbFlux);
+	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d (taux de perte %f%%)\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,((double)stat.paquetPerdus/(double)stat.paquetEmis)*100,flux.nbFlux);
 	printf("Délai moyen de bout en bout: %f\n",stat.dureeMoyenne);
 	printf("Ecart type: %f\n",stat.ecartType);
 	printf("Variance: %f\n",stat.ecartType*stat.ecartType);

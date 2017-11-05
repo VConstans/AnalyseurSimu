@@ -1,8 +1,10 @@
 #!/bin/bash
 
-echo "set off" >> /tmp/paquetPerdu$$
+echo "set xlabel \"Temps (en s)\"" >> /tmp/paquetPerdu$$
+echo "set ylabel \"Nombre de paquets perdus\"" >> /tmp/paquetPerdu$$
+echo "set key off" >> /tmp/paquetPerdu$$
 
-echo "plot \"paquetPerdu.out\" u 1:2 w lp" >> /tmp/paquetPerdu$$
+echo "plot \"paquetPerdu.out\" u 1:2 w l" >> /tmp/paquetPerdu$$
 echo "pause -1" >> /tmp/paquetPerdu$$
 
 gnuplot /tmp/paquetPerdu$$

@@ -44,7 +44,7 @@ void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct sta
 		{
 			printf("Nombre de paquets émis: %d\n",curseur->emis);
 			printf("Nombre de paquets recu: %d\n",curseur->recu);
-			printf("Nombre de paquets perdus: %d (taux de perte: %f%%)\n",curseur->perdu,(double)curseur->perdu/(double)curseur->emis);
+			printf("Nombre de paquets perdus: %d (taux de perte: %f%%)\n",curseur->perdu,((double)curseur->perdu/(double)curseur->emis)*100);
 			printf("Durée de vie: %f\n",curseur->tempsFin - curseur->tempsDebut);
 
 			double ecartType = (sqrt(curseur->dureeCarreMoyenne*(double)(curseur->recu) - curseur->dureeMoyenne*curseur->dureeMoyenne))/(double)(curseur->recu);
