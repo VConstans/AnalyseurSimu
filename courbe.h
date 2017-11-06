@@ -15,6 +15,7 @@ void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux);
 void courbeDelaiPaquet(FILE* fd,unsigned int pid,double delai);
 void courbePaquetPerdu(FILE* fd,double temps,struct statGlobal* statG);
 void courbeUtilisationLien(FILE* fd, struct listeLien* listeLien);
+void courbeEmission(FILE* fd,double temps, struct statGlobal* statG);
 
 
 #endif

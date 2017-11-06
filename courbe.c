@@ -18,6 +18,10 @@ void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, 
 	{
 		courbePaquetPerdu(fds->paquetPerdu,temps,statG);
 	}
+	if(opt->echEmission == ACTIVE)
+	{
+		courbeEmission(fds->emission,temps,statG);
+	}
 	//TODO autre output
 }
 
@@ -147,4 +151,10 @@ void courbeUtilisationLien(FILE* fd, struct listeLien* listeLien)
 
 		curseur = curseur->suivant;
 	}
+}
+
+
+void courbeEmission(FILE* fd, double temps,struct statGlobal* statG)
+{
+	fprintf(fd,"%f %d\n",temps,statG->paquetEmis);
 }

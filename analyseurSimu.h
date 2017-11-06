@@ -14,6 +14,7 @@ struct option
 	int echDelai;
 	int echPerdu;
 	int echLien;
+	int echEmission;
 };
 
 

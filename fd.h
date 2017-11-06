@@ -12,6 +12,7 @@ struct fd
 	FILE* delaiPaquet;
 	FILE* paquetPerdu;
 	FILE* utilisationLien;
+	FILE* emission;
 };
 
 #endif

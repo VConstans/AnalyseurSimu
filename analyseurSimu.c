@@ -20,9 +20,10 @@ int main(int argc, char* argv[])
 	opt.echDelai = NONE;
 	opt.echPerdu = NONE;
 	opt.echLien = NONE;
+	opt.echEmission = NONE;
 
 
-	while((arg=getopt(argc,argv,"i:m:p:x:f:F:tad:Pl")) != -1)
+	while((arg=getopt(argc,argv,"i:m:p:x:f:F:tad:Ple")) != -1)
 	{
 		switch(arg)
 		{
@@ -80,6 +81,9 @@ int main(int argc, char* argv[])
 				break;
 			case 'l':
 				opt.echLien = ACTIVE;
+				break;
+			case 'e':
+				opt.echEmission = ACTIVE;
 				break;
 			default:
 				printf("Erreur, option non valide\n");
@@ -191,6 +195,10 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	if(opt->echLien != NONE)
 	{
 		dataOutput->utilisationLien = fopen("utilisationLien.out","w+");
+	}
+	if(opt->echEmission != NONE)
+	{
+		dataOutput->emission = fopen("emission.out","w+");
 	}
 
 	initListeLien(listeLien,matAdj);
