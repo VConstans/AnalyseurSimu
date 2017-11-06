@@ -1,8 +1,10 @@
+//CONSTANS Victor
+
 #include "courbe.h"
 
 int header =1;
 
-
+//Appelle des différentes fonction qui vont inscrire les données utiles pour les différentes représentation graphique
 void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, struct statGlobal* statG, struct listeFlux* listeFlux,struct option* opt)
 {
 	courbeRemplissageFile(fds->remplissageFile,temps,statNoeud,opt);
@@ -22,15 +24,17 @@ void writeDataOutput(struct fd* fds, double temps, struct statNoeud* statNoeud, 
 	{
 		courbeEmission(fds->emission,temps,statG);
 	}
-	//TODO autre output
 }
 
+
+//Inscrit l'heure à laquelle s'est produit l'événement et le nombre de paquet dans la file selectionnée
 void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, struct option* opt)
 {
 	if(opt->echFile == NONE)
 	{
 		return;
 	}
+	//On cumul la somme de toute les files de tout les noeuds
 	else if(opt->echFile == SUM)
 	{
 		if(header)
@@ -44,6 +48,7 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 
 		return;
 	}
+	//On inscrit la somme des files noeud par noeud
 	else if(opt->echFile == ALL)
 	{
 		if(header)
@@ -63,8 +68,10 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 
 		return;
 	}
+	//On a selectionner un noeud précis à echantillonner
 	else
 	{
+		//On affiche la somme de toute les files d'un noeud
 		if(opt->echFileDetail == NONE)
 		{
 			if(header)
@@ -77,6 +84,7 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 
 			return;
 		}
+		//On inscrit le détail de remplissage de chacune des files d'un noeud précis
 		else if(opt->echFileDetail == ALL)
 		{
 			if(header)
@@ -98,6 +106,7 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 			fprintf(fd,"\n");
 			return;
 		}
+		//On affiche le remplissage d'une file précise d'un noeud précis
 		else
 		{
 			if(header)
@@ -116,6 +125,8 @@ void courbeRemplissageFile(FILE* fd,double temps,struct statNoeud* statNoeud, st
 	}
 }
 
+
+//On inscrit le nombre de paquet en transit dans le reseau
 void courbePaquetTransit(FILE* fd,double temps, struct statGlobal* statG)
 {
 	fprintf(fd,"%f ",temps);
@@ -124,6 +135,8 @@ void courbePaquetTransit(FILE* fd,double temps, struct statGlobal* statG)
 }
 
 
+
+//On inscrit le nombre de flux actif
 void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux)
 {
 	fprintf(fd,"%f ",temps);
@@ -131,16 +144,21 @@ void courbeFluxActif(FILE* fd,double temps,struct listeFlux* listeFlux)
 }
 
 
-void courbeDelaiPaquet(FILE* fd,unsigned int pid,double delai)
+//On inscrit le délai des différents paquet d'un flux
+void courbeDelaiPaquet(FILE* fd,double temps,double delai)
 {
-	fprintf(fd,"%d %f\n",pid,delai);
+	fprintf(fd,"%f %f\n",temps,delai);
 }
 
+
+//On inscrit le nombre de paquet perdus à un instant
 void courbePaquetPerdu(FILE* fd,double temps,struct statGlobal* statG)
 {
 	fprintf(fd,"%f %d\n",temps,statG->paquetPerdus);
 }
 
+
+//On inscrit le temps d'utilisation des différents liens
 void courbeUtilisationLien(FILE* fd, struct listeLien* listeLien)
 {
 	struct lien* curseur = listeLien->liens;
@@ -154,6 +172,7 @@ void courbeUtilisationLien(FILE* fd, struct listeLien* listeLien)
 }
 
 
+//On inscrit le nombre de paquet émis à un instant
 void courbeEmission(FILE* fd, double temps,struct statGlobal* statG)
 {
 	fprintf(fd,"%f %d\n",temps,statG->paquetEmis);

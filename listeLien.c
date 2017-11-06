@@ -1,5 +1,8 @@
+//CONSTANS Victor
+
 #include "listeLien.h"
 
+//Création et initilisation de la liste des lien selon les données fournie par la matrice d'adjacence
 void initListeLien(struct listeLien* listeLien, struct matriceAdj* matAdj)
 {
 	unsigned int i,j;
@@ -31,6 +34,7 @@ void initListeLien(struct listeLien* listeLien, struct matriceAdj* matAdj)
 }
 
 
+//Un paquet transit sur le lien
 void addPaquetInLien(struct listeLien* listeLien, unsigned int ext1, unsigned int ext2, struct evt* evt)
 {
 	struct lien* curseur = listeLien->liens;
@@ -56,7 +60,7 @@ void addPaquetInLien(struct listeLien* listeLien, unsigned int ext1, unsigned in
 }
 
 
-
+//Le paquet à fini de transiter sur le lien
 void delPaquetInLien(struct listeLien* listeLien, unsigned int ext1, unsigned int ext2, struct evt* evt)
 {
 	struct lien* curseur = listeLien->liens;

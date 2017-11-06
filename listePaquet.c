@@ -1,5 +1,9 @@
+//CONSTANS Victor
+
 #include "listePaquet.h"
 
+
+//Créé et initialise un paquet
 struct paquet* createPaquet(struct evt* evt)
 {
 	struct paquet* maillon = (struct paquet*) malloc(sizeof(struct paquet));
@@ -18,6 +22,7 @@ struct paquet* createPaquet(struct evt* evt)
 }
 
 
+//Ajoute un paquet à la liste chainée triée des paquets
 struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 {
 	//File vide
@@ -85,6 +90,7 @@ struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 
 
 
+//Renvoie le paquet recherché
 struct paquet* searchPaquet(struct evt* evt, struct listePaquet* liste)
 {
 	struct paquet* curseur = liste->suivant;
@@ -105,6 +111,7 @@ struct paquet* searchPaquet(struct evt* evt, struct listePaquet* liste)
 
 
 
+//Inscrit la date de recpetion du paquet
 void setRecepDatePaquet(double temps, struct paquet* paquet)
 {
 	paquet->reception = temps;
@@ -112,6 +119,8 @@ void setRecepDatePaquet(double temps, struct paquet* paquet)
 
 
 
+
+//Avance le pointeur de la position courante du paquet dans la liste des noeuds traversé par le paquet
 void updatePos(struct paquet* paquet)
 {
 	if(paquet->positions->actuelle == NULL)
@@ -126,6 +135,7 @@ void updatePos(struct paquet* paquet)
 
 
 
+//Indique la localisation du paquet (noeud et file)
 struct localisationPaquet* posOfNumPaquet(struct paquet* paquet)
 {
 	struct localisationPaquet* localisation = (struct localisationPaquet*)malloc(sizeof(struct localisationPaquet));
@@ -137,6 +147,8 @@ struct localisationPaquet* posOfNumPaquet(struct paquet* paquet)
 }
 
 
+
+//Supprime un paquet de la liste chainée
 void delPaquet(struct listePaquet* liste, struct paquet* paquet)
 {
 	if(paquet->precedant == NULL)
@@ -154,18 +166,21 @@ void delPaquet(struct listePaquet* liste, struct paquet* paquet)
 
 	liste->nbPaquet--;
 
-	//TODO autre free dans struct
 	free(paquet);
 
 	return;
 }
 
 
+
+//Inscrit le temps actuel dans une variable
 void setActualTemps(struct evt* evt, struct paquet* paquet)
 {
 	paquet->tempsTmp = evt->temps;
 }
 
+
+//Ajoute le temps passé dans une file
 double updateTempsFile(struct evt* evt, struct paquet* paquet)
 {
 	double duree = evt->temps - paquet->tempsTmp;
@@ -175,6 +190,8 @@ double updateTempsFile(struct evt* evt, struct paquet* paquet)
 	return duree;
 }
 
+
+//Ajoute le temps passé sur un lien
 double updateTempsLien(struct evt* evt, struct paquet* paquet)
 {
 	double duree = evt->temps - paquet->tempsTmp;

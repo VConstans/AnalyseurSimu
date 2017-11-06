@@ -7,27 +7,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//Paquet sur un lien
 struct paquetInLien
 {
-	unsigned int numPaquet;
-	struct paquetInLien* suivant;
+	unsigned int numPaquet;		//Numéro du paquet sur le lien
+	struct paquetInLien* suivant;	//paquet suivant
 };
+
+
 
 struct lien
 {
-	unsigned int ext1;
-	unsigned int ext2;
-	double tempsOccupe;
+	unsigned int ext1;	//extrémité du lien
+	unsigned int ext2;	//extrémité du lien
+	double tempsOccupe;	//Temps ou le lien est occupe
 	double tempsTmp;
-	struct paquetInLien* paquetInLien;
-	struct lien* suivant;
+	struct paquetInLien* paquetInLien;	//liste chainée des pauqet sur le lien à un instant t
+	struct lien* suivant;	//Lien suivant
 };
 
 
 struct listeLien
 {
-	unsigned int nbLien;
-	struct lien* liens;
+	unsigned int nbLien;	//nombre de lien
+	struct lien* liens;	//liste chainée de lien
 };
 
 

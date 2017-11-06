@@ -7,6 +7,7 @@ FILE* ouvertureMatrice(char* matrice)
 }
 
 
+//Mise de la matrice en mémoire
 struct matriceAdj* lectureMatrice(FILE* fdMatrice)
 {
 	int taille = 0;
@@ -22,7 +23,7 @@ struct matriceAdj* lectureMatrice(FILE* fdMatrice)
 
 	do
 	{
-		lg = fscanf(fdMatrice,"%d",&val);	//TODO test si fichier mal formaté
+		lg = fscanf(fdMatrice,"%d",&val);
 		if(lg == 0 || lg == EOF)
 		{
 			perror("Fichier mal formaté");
@@ -60,6 +61,7 @@ struct matriceAdj* lectureMatrice(FILE* fdMatrice)
 	return matAdj;
 }
 
+
 struct matriceAdj* loadMatriceAdjacence(char* fileMatrice)
 {
 	FILE* fdMatrice = ouvertureMatrice(fileMatrice);
@@ -70,6 +72,7 @@ struct matriceAdj* loadMatriceAdjacence(char* fileMatrice)
 }
 
 
+//Renvoie le débit d'un lien
 int debitLien(matrice mat,int i, int j)
 {
 	return (mat[i-1][j-1]<mat[j-1][i-1])? mat[j-1][i-1] : mat[i-1][j-1];

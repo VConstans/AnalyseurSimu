@@ -1,20 +1,21 @@
 #ifndef __ANALYSEUR_SIMU_H__
 #define __ANALYSEUR_SIMU_H__
 
+//Structure servant à stocker les choix d'oiption de l'utilisateur
 struct option
 {
-	char* traceFile;
-	char* matriceFile;
-	int tracePaquet;
-	int traceFlux;
-	int echFile;
+	char* traceFile;	//nom du fichier trace
+	char* matriceFile;	//nom du fichier matrice
+	int tracePaquet;	//tracage du paquet
+	int traceFlux;		//tracage du flux
+	int echFile;		//echantillonnage du remplissage des files
 	int echFileDetail;
-	int echTransit;
-	int echFluxActif;
-	int echDelai;
-	int echPerdu;
-	int echLien;
-	int echEmission;
+	int echTransit;		//Echantillonnage du nombre de paquet en transit
+	int echFluxActif;	//echantillonnage du nombre de flux actif
+	int echDelai;		//echantillonnage du delai des paquet d'un flux
+	int echPerdu;		//echantillonnage du nombre de paquet perdus
+	int echLien;		//Echantillonnage de l'utilisation des liens
+	int echEmission;	//echantillonnage du nombre de paquet emis
 };
 
 
@@ -43,6 +44,7 @@ struct option
 
 int main(int argc, char* argv[]);
 void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNoeud* statNoeud, struct fd* dataOutput,struct matriceAdj* matAdj,struct listeLien* listeLien, struct option* opt);
+void closeFile(struct fd* fds, struct option* opt);
 
 
 #endif

@@ -2,10 +2,11 @@
 #define __LOCALISATIONPAQUET_H__
 
 
+//Servant de localisateur d'un paquet
 struct localisationPaquet
 {
-	unsigned int noeud;
-	int file;
+	unsigned int noeud;	//Noeud dans lequel se trouve le paquet
+	int file;	//File dans lequel se trouve le paquet
 };
 
 

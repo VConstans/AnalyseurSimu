@@ -1,10 +1,12 @@
+//CONSTANS Victor
+
 #include "analyseurSimu.h"
 
 int main(int argc, char* argv[])
 {
 	if(argc < 5)
 	{
-		printf("Usage: %s -i <trace_file> -m <matrice_file> [-p trace_packet] [-f trace_flux]\n",argv[0]);
+		printf("Usage: %s -i <trace_file> -m <matrice_file>\n",argv[0]);
 		exit(-1);
 	}
 
@@ -28,11 +30,9 @@ int main(int argc, char* argv[])
 		switch(arg)
 		{
 			case 'i':
-				//opt.traceFile = (char*)malloc(strlen(optarg)*sizeof(char*));
 				opt.traceFile = optarg;
 				break;
 			case 'm':
-				//opt.matriceFile = (char*)malloc(strlen(optarg)*sizeof(char*));
 				opt.matriceFile = optarg;
 				break;
 			case 'p':
@@ -109,36 +109,29 @@ int main(int argc, char* argv[])
 	struct listeLien listeLien;
 
 
+	//Initialisation des données statistique
 	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj,&listeLien,&opt);
 
-	printf("Debut\n");
+	//Mise en mémoire des flux et paquets pour connaitre le cheminement des paquets
 	initTrace(&flux,fdTrace);
-	printf("fin\n");
 
 
-	struct evt* ancienEvt=NULL;
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
+		//Analyse de l'événement
 		analyseEvt(newEvt,&stat,&flux,&statNoeud,&opt,&dataOutput,matAdj,&listeLien);
+		//Ecriture des données dans les différents fichier output
 		writeDataOutput(&dataOutput, newEvt->temps,&statNoeud,&stat,&flux,&opt);
-
-
-		if(ancienEvt!=NULL)
-		{
-			free(ancienEvt->src);
-			free(ancienEvt->dst);
-			free(ancienEvt->pos);
-			free(ancienEvt);
-		}
 	}
 
-	printf("Sortit\n");
-
+	//Receuillement des données dans les différents flux
 	analyseFinale(&stat,&flux,&opt,&dataOutput,&listeLien);
 
+	closeFile(&dataOutput,&opt);
+	fclose(fdTrace);
 
-	printf("Paquet Emis %d\nArrivé noeud inter %d\nDepart fille %d\nPaquet Recus %d\nPaquet perdus %d (taux de perte %f%%)\nNb flux %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,((double)stat.paquetPerdus/(double)stat.paquetEmis)*100,flux.nbFlux);
+	printf("Paquet Emis: %d\nArrivé noeud inter: %d\nDepart fille: %d\nPaquet Recus: %d\nPaquet perdus: %d (taux de perte %f%%)\nNb flux: %d\n",stat.paquetEmis,stat.arriveInter,stat.departFile,stat.paquetRecus,stat.paquetPerdus,((double)stat.paquetPerdus/(double)stat.paquetEmis)*100,flux.nbFlux);
 	printf("Délai moyen de bout en bout: %f\n",stat.dureeMoyenne);
 	printf("Ecart type: %f\n",stat.ecartType);
 	printf("Variance: %f\n",stat.ecartType*stat.ecartType);
@@ -162,7 +155,6 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	statG->paquetRecus=0;
 	statG->paquetPerdus=0;
 	statG->nbFlux=0;
-	statG->locPerte=NULL;
 	statG->nbPaquetTransit = 0;
 	statG->tempsFile = 0;
 	statG->tempsLien = 0;
@@ -206,4 +198,37 @@ void initAnalyse(struct statGlobal* statG, struct listeFlux* flux, struct statNo
 	}
 
 	initListeLien(listeLien,matAdj);
+}
+
+
+void closeFile(struct fd* fds, struct option* opt)
+{
+	if(opt->echFile != NONE)
+	{
+		fclose(fds->remplissageFile);
+	}
+	if(opt->echTransit != NONE)
+	{
+		fclose(fds->paquetTransit);
+	}
+	if(opt->echFluxActif != NONE)
+	{
+		fclose(fds->fluxActif);
+	}
+	if(opt->echDelai != NONE)
+	{
+		fclose(fds->delaiPaquet);
+	}
+	if(opt->echPerdu != NONE)
+	{
+		fclose(fds->paquetPerdu);
+	}
+	if(opt->echLien != NONE)
+	{
+		fclose(fds->utilisationLien);
+	}
+	if(opt->echEmission != NONE)
+	{
+		fclose(fds->emission);
+	}
 }

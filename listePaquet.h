@@ -11,21 +11,21 @@
 
 struct paquet
 {
-	unsigned int numPaquet;
-	double emission;
-	double reception;
-	double tempsTmp;
-	double tempsFile;
-	double tempsLien;
-	struct listePosition* positions;
-	struct paquet* suivant;
-	struct paquet* precedant;
+	unsigned int numPaquet;	//Numéro du paquet
+	double emission;	//Date d'émission
+	double reception;	//date de reception
+	double tempsTmp;	//Variable de stockage de temps temporaire
+	double tempsFile;	//Somme du temps passé dans les files
+	double tempsLien;	//Somme du temps passé sur un lien
+	struct listePosition* positions;	//Liste chainée des noeud traversé par le paquet
+	struct paquet* suivant;		//Paquet suivant dans la liste
+	struct paquet* precedant;	//Paquet précédant dans la liste
 };
 
 struct listePaquet
 {
-	unsigned int nbPaquet;
-	struct paquet* suivant;
+	unsigned int nbPaquet;	//Nombre de paquet
+	struct paquet* suivant;	//Liste doublement chainée triée des paquets
 };
 
 struct paquet* createPaquet(struct evt* evt);

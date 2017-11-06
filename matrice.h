@@ -8,8 +8,8 @@ typedef int** matrice;
 
 struct matriceAdj
 {
-	matrice mat;
-	unsigned int nbNoeud;
+	matrice mat;	//stockage de la matrice
+	unsigned int nbNoeud;	//Nombre de noeud dans le systeme
 };
 
 

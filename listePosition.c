@@ -1,5 +1,9 @@
+//CONSTANS Victor
+
 #include "listePosition.h"
 
+
+//Initialisation de la liste chainée des noeuds traversé par un paquet
 struct listePosition* initListePosition()
 {
 	struct listePosition* listePosition = (struct listePosition*)malloc(sizeof(struct listePosition));
@@ -11,6 +15,8 @@ struct listePosition* initListePosition()
 	return listePosition;
 }
 
+
+//Ajout d'un noeud traversé par un paquet à la liste de ce paquet
 void addListePosition(struct listePosition* listePosition, unsigned int numNoeud)
 {
 	struct position* maillon = (struct position*)malloc(sizeof(struct position));

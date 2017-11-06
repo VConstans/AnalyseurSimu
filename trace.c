@@ -2,17 +2,18 @@
 #include <stdlib.h>
 #include "trace.h"
 
-#define TAILLE_NOM_NOEUD 10	//TODO changer
+#define TAILLE_NOM_NOEUD 10
 
 
 FILE* ouvertureTrace(char nomtrace[])
 {
 	FILE* fdTrace = fopen(nomtrace,"r");
-	//TODO Contorler retour
 
 	return fdTrace;
 }
 
+
+//Lecture de l'événement suivant dans le fichier trace
 struct evt* nextEvt(FILE* fdTrace)
 {
 	struct evt* newEvt = (struct evt*) malloc(sizeof(struct evt));
@@ -36,17 +37,19 @@ struct evt* nextEvt(FILE* fdTrace)
 	{
 		if(newEvt->code == 4)
 		{
-			fscanf(fdTrace,"%s %s %s\n",(newEvt->src),(newEvt->dst),(newEvt->pos));	//TODO test
+			fscanf(fdTrace,"%s %s %s\n",(newEvt->src),(newEvt->dst),(newEvt->pos));
 		}
 		else
 		{
-			fscanf(fdTrace,"%d %s %s %s\n",&bif,(newEvt->src),(newEvt->dst),(newEvt->pos));	//TODO test
+			fscanf(fdTrace,"%d %s %s %s\n",&bif,(newEvt->src),(newEvt->dst),(newEvt->pos));
 		}
 		return newEvt;
 	}
 }
 
 
+
+//Convertit la position (chaine de caractère) en numéro
 unsigned int convPosToNum(char* pos)
 {
 	unsigned int num;

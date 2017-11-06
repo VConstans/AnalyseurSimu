@@ -1,5 +1,6 @@
 #include "listeFlux.h"
 
+//Création et initialisation d'un nouveau flux
 struct flux* createFlux(struct evt* evt)
 {
 	struct flux* maillon = (struct flux*) malloc(sizeof(struct flux));
@@ -21,6 +22,8 @@ struct flux* createFlux(struct evt* evt)
 	return maillon;
 }
 
+
+//Ajout d'un flux à la liste chainée triée de flux
 struct flux* addFlux(struct evt* evt,struct listeFlux* liste)
 {
 	//File vide
@@ -92,7 +95,7 @@ struct flux* addFlux(struct evt* evt,struct listeFlux* liste)
 
 
 
-
+//Traitement d'un flux pour mettre à jour les information statistique concernant les flux
 struct flux* traitementFlux(struct evt* evt,struct listeFlux* liste)
 {
 	struct flux* curseur = liste->suivant;
@@ -140,7 +143,7 @@ struct flux* traitementFlux(struct evt* evt,struct listeFlux* liste)
 
 
 
-
+//Renvoie la liste chainée de paquet qui font partit du même flux que l'événement passé en paramètre
 struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFlux)
 {
 	//File vide
@@ -178,6 +181,7 @@ struct listePaquet* listePaquetOfFlux(struct evt* evt, struct listeFlux* listeFl
 }
 
 
+//Calcul du délai de bout à bout d'un paquet et ajout de ce délai à la variable stockant le cumul des délai pour en calculer la moyenne
 double calculDuree(struct paquet* paquet, struct flux* flux)
 {
 	if(paquet->reception == -1)
@@ -196,6 +200,9 @@ double calculDuree(struct paquet* paquet, struct flux* flux)
 }
 
 
+
+/*Mise en mémoire des flux et paquet de ces flux ainsi que du chemin emprunter par ces paquet pour 
+determiner dans quelle file il faut placer un paquet lorsqu'il arrive à un noeud intermédiaire*/
 void initTrace(struct listeFlux* listeFlux,FILE* fdTrace)
 {
 	struct flux* flux;
@@ -209,7 +216,6 @@ void initTrace(struct listeFlux* listeFlux,FILE* fdTrace)
 			flux = addFlux(newEvt,listeFlux);
 			paquet = addPaquet(newEvt,flux->paquets);
 
-		//XXX peut le mettre avant les deux instruction precedante?
 			unsigned int pos = convPosToNum(newEvt->pos);
 			addListePosition(paquet->positions,pos);
 		}

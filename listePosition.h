@@ -4,18 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//Position d'un paquet
 struct position
 {
-	unsigned int numNoeud;
-	struct position* suivant;
+	unsigned int numNoeud;	//numero du noeud
+	struct position* suivant;	//noeud suivant que le paquet va traverser
 };
 
 
 struct listePosition
 {
-	struct position* debut;
-	struct position* fin;
-	struct position* actuelle;
+	struct position* debut;	//Debut de la liste chainée
+	struct position* fin;	//Fin de la liste chainée
+	struct position* actuelle;	//Position courante du paquet 
 };
 
 

@@ -1,3 +1,5 @@
+//CONSTANS Victor
+
 #include "analyse.h"
 
 double tempsEstimationTaille;
@@ -5,7 +7,7 @@ double estimationTaille;
 int condEstimationTaille = 1;
 
 
-
+//Lancement des différentes analyse de l'évenement et recherche du flux et du paquet concerné par l'événement
 void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj,struct listeLien* listeLien)
 {
 	struct flux* flux = traitementFlux(evt,listeFlux);
@@ -31,9 +33,11 @@ void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* list
 	analyseGlobal(evt->code,statG);
 	analyseFlux(evt,opt,fds,statG,matAdj,listeLien,paquet,localisation,flux);
 	analyseNoeud(evt,statNoeud,localisation);
-	//TODO autre analyse
+
 	free(localisation);
 }
+
+
 
 void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt,struct fd* fds, struct listeLien* listeLien)
 {
@@ -42,8 +46,9 @@ void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct
 	{
 		courbeUtilisationLien(fds->utilisationLien,listeLien);
 	}
-	//TODO autre analyse
 }
+
+
 
 void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct statGlobal* statG)
 {
@@ -52,18 +57,22 @@ void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct sta
 	double sommeCarreDuree = 0;
 	unsigned int sommePaquet = 0;
 
+	//Calcul du temps moyen de bout en bout global
 	while(curseur != NULL)
 	{
 		sommeDuree+=curseur->dureeMoyenne;
 		sommeCarreDuree+=curseur->dureeCarreMoyenne;
 		sommePaquet+=curseur->recu;
 
-		//XXX compraison entre signed et unsigned
+		//Si on trace un flux, on affiche les informations le concernant
 		if(curseur->numFlux == (unsigned)opt->traceFlux)
 		{
+			printf("\n\n----------------TRACAGE DU FLUX %d-----------------\n\n",curseur->numFlux);
 			printf("Nombre de paquets émis: %d\n",curseur->emis);
 			printf("Nombre de paquets recu: %d\n",curseur->recu);
 			printf("Nombre de paquets perdus: %d (taux de perte: %f%%)\n",curseur->perdu,((double)curseur->perdu/(double)curseur->emis)*100);
+			printf("Naissance du flux à temps %f\n",curseur->tempsDebut);
+			printf("Mort du flux à temps %f\n",curseur->tempsFin);
 			printf("Durée de vie: %f\n",curseur->tempsFin - curseur->tempsDebut);
 
 			double ecartType = (sqrt(curseur->dureeCarreMoyenne*(double)(curseur->recu) - curseur->dureeMoyenne*curseur->dureeMoyenne))/(double)(curseur->recu);
@@ -90,6 +99,7 @@ void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct sta
 }
 
 
+//Mise a jour des informations statistique globale
 void analyseGlobal(int code, struct statGlobal* statG)
 {
 	switch(code)
@@ -117,7 +127,9 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-struct paquet* analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien, struct paquet* paquet,struct localisationPaquet* localisation, struct flux* flux)
+
+//Mise a jour des informations statistique du flux et du paquet de l'événement
+void analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien, struct paquet* paquet,struct localisationPaquet* localisation, struct flux* flux)
 {
 	double duree;
 	double delai;
@@ -138,7 +150,6 @@ struct paquet* analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,st
 				printf("Départ du noeud %s à temps \t\t%f\n",evt->pos,evt->temps);
 			}
 			setActualTemps(evt,paquet);
-			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
 			break;
 		case 1:
 			
@@ -175,7 +186,7 @@ struct paquet* analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,st
 			}
 			break;
 		case 3:
-			setRecepDatePaquet(evt->temps,paquet);	//XXX utile?
+			setRecepDatePaquet(evt->temps,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
 				printf("Arrivé à destination (%s) à temps \t%f\n",evt->pos,evt->temps);
@@ -184,13 +195,12 @@ struct paquet* analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,st
 				printf("Temps passé dans les files: %f\n",paquet->tempsFile);
 				printf("Temps passé sur les liens: %f\n",paquet->tempsLien);
 				printf("Taille du paquet: %f\n",estimationTaille);
-				printf("\n\n----------------------------------------------\n\n");
 			}
 			addTemps(statG,paquet);
 			delai = calculDuree(paquet,flux);
 			if(opt->echDelai != NONE && opt->echDelai == (int)evt->fid)
 			{
-				courbeDelaiPaquet(fds->delaiPaquet,paquet->numPaquet,delai);
+				courbeDelaiPaquet(fds->delaiPaquet,evt->temps,delai);
 			}
 
 			delPaquet(flux->paquets,paquet);
@@ -201,18 +211,16 @@ struct paquet* analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,st
 				printf("Destruction du paquet au noeud %s à temps %f\n",evt->pos,evt->temps);
 				printf("Temps passé dans les files: %f\n",paquet->tempsFile);
 				printf("Temps passé sur les liens: %f\n",paquet->tempsLien);
-				printf("\n\n----------------------------------------------\n\n");
 			}
 			addTemps(statG,paquet);
-			setRecepDatePaquet(-1,paquet);	//XXX mettre a jour
+			setRecepDatePaquet(-1,paquet);
 			delPaquet(flux->paquets,paquet);
 	}
 
-	return paquet;
 }
 
 
-
+//Mise a jour des informations statisitique du noeuds concerné par l'événement
 void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct localisationPaquet* localisation)
 {
 	switch(evt->code)
@@ -231,13 +239,11 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct localisat
 			break;
 		case 3:
 			decrNbPaquetDansFile(statNoeud,localisation);
-			//XXX optimisation mémoire: supprimer les paquets au fur et à mesure
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
 		case 4:
 			statNoeud->nbPaquetTotalDansFile--;
 			
-			setTailleFile(statNoeud,localisation);
 			decrNbPaquetDansFile(statNoeud,localisation);
 
 			incrNbPerte(statNoeud,convPosToNum(evt->pos));
