@@ -137,11 +137,11 @@ struct localisationPaquet* posOfNumPaquet(struct paquet* paquet)
 }
 
 
-void delPaquet(struct evt* evt, struct listePaquet* liste, struct paquet* paquet)
+void delPaquet(struct listePaquet* liste, struct paquet* paquet)
 {
 	if(paquet->precedant == NULL)
 	{
-		liste->suivant = paquet>suivant;
+		liste->suivant = paquet->suivant;
 	}
 	else
 	{
@@ -155,7 +155,7 @@ void delPaquet(struct evt* evt, struct listePaquet* liste, struct paquet* paquet
 	liste->nbPaquet--;
 
 	//TODO autre free dans struct
-	free(curseur);
+	free(paquet);
 
 	return;
 }

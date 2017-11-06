@@ -15,8 +15,8 @@
 
 void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj,struct listeLien* listeLien);
 void analyseGlobal(int code, struct statGlobal* statG);
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux,struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien);
-void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* paquet);
+struct paquet* analyseFlux(struct evt* evt,struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien, struct paquet* paquet, struct localisationPaquet* localisation, struct flux* flux);
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct localisationPaquet* localisation);
 void analyseFinalFlux(struct listeFlux* listeFlux,struct option* opt, struct statGlobal* statG);
 void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt, struct fd* fds,struct listeLien* listeLien);
 

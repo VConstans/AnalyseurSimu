@@ -133,6 +133,8 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	printf("Sortit\n");
+
 	analyseFinale(&stat,&flux,&opt,&dataOutput,&listeLien);
 
 

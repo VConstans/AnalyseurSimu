@@ -36,7 +36,7 @@ struct paquet* searchPaquet(struct evt* evt, struct listePaquet* liste);
 void setRecepDatePaquet(double temps, struct paquet* paquet);
 void updatePos(struct paquet* paquet);
 struct localisationPaquet* posOfNumPaquet(struct paquet* paquet);
-void delPaquet(struct evt* evt, struct listePaquet* liste, struct paquet* paquet);
+void delPaquet(struct listePaquet* liste, struct paquet* paquet);
 void setActualTemps(struct evt* evt, struct paquet* paquet);
 double updateTempsFile(struct evt* evt, struct paquet* paquet);
 double updateTempsLien(struct evt* evt, struct paquet* paquet);

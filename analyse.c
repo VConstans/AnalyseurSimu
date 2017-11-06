@@ -8,12 +8,31 @@ int condEstimationTaille = 1;
 
 void analyseEvt(struct evt* evt, struct statGlobal* statG,struct listeFlux* listeFlux, struct statNoeud* statNoeud, struct option* opt, struct fd* fds, struct matriceAdj* matAdj,struct listeLien* listeLien)
 {
-	struct paquet* paquet;
+	struct flux* flux = traitementFlux(evt,listeFlux);
+	struct paquet* paquet = searchPaquet(evt, flux->paquets);
+
+	if(evt->code == 0)
+	{
+		updatePos(paquet);
+	}
+	struct localisationPaquet* localisation = posOfNumPaquet(paquet);
+
+	if(evt->code ==1)
+	{
+		if(opt->echLien == ACTIVE)
+		{
+			delPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
+		}
+		updatePos(paquet);
+
+	}
+
 
 	analyseGlobal(evt->code,statG);
-	paquet = analyseFlux(evt,listeFlux,opt,fds,statG,matAdj,listeLien);
-	analyseNoeud(evt,statNoeud,paquet);
+	analyseFlux(evt,opt,fds,statG,matAdj,listeLien,paquet,localisation,flux);
+	analyseNoeud(evt,statNoeud,localisation);
 	//TODO autre analyse
+	free(localisation);
 }
 
 void analyseFinale(struct statGlobal* statG, struct listeFlux* listeFlux, struct option* opt,struct fd* fds, struct listeLien* listeLien)
@@ -98,15 +117,12 @@ void analyseGlobal(int code, struct statGlobal* statG)
 }
 
 
-struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien)
+struct paquet* analyseFlux(struct evt* evt, struct option* opt,struct fd* fds,struct statGlobal* statG, struct matriceAdj* matAdj,struct listeLien* listeLien, struct paquet* paquet,struct localisationPaquet* localisation, struct flux* flux)
 {
-	struct flux* flux = traitementFlux(evt,listeFlux);
-	struct paquet* paquet = searchPaquet(evt, flux->paquets);
 	double duree;
 	double delai;
 	unsigned int noeudTmp, noeudTmp2;
 	int debitTmp;
-	struct localisationPaquet* localisation;
 
 	switch(evt->code)
 	{
@@ -122,15 +138,10 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 				printf("Départ du noeud %s à temps \t\t%f\n",evt->pos,evt->temps);
 			}
 			setActualTemps(evt,paquet);
-			updatePos(paquet);
 			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
 			break;
 		case 1:
-			if(opt->echLien == ACTIVE)
-			{
-				localisation = posOfNumPaquet(paquet);
-				delPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
-			}
+			
 			duree = updateTempsLien(evt,paquet);
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
 			{
@@ -145,12 +156,10 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 				}
 				printf("Temps passé sur le lien: \t\t%f\nArrivé sur le noeud %s à temps   \t%f\n",duree,evt->pos,evt->temps);
 			}
-			updatePos(paquet);
 			break;
 		case 2:
 			if(opt->echLien == ACTIVE)
 			{
-				localisation = posOfNumPaquet(paquet);
 				addPaquetInLien(listeLien,localisation->noeud,localisation->file,evt);
 			}
 			duree = updateTempsFile(evt,paquet);
@@ -183,9 +192,8 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			{
 				courbeDelaiPaquet(fds->delaiPaquet,paquet->numPaquet,delai);
 			}
-			//XXX IF(paquet trace alors affiche)
-			//XXX durée de transmission avant del paquet
-			//delPaquet(evt,flux->paquets);
+
+			delPaquet(flux->paquets,paquet);
 			break;
 		case 4:
 			if(opt->tracePaquet != NONE && opt->tracePaquet == (int)evt->pid)
@@ -197,6 +205,7 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			}
 			addTemps(statG,paquet);
 			setRecepDatePaquet(-1,paquet);	//XXX mettre a jour
+			delPaquet(flux->paquets,paquet);
 	}
 
 	return paquet;
@@ -204,12 +213,8 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 
 
 
-void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* paquet)
+void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct localisationPaquet* localisation)
 {
-	struct localisationPaquet* localisation;
-
-	localisation = posOfNumPaquet(paquet);
-
 	switch(evt->code)
 	{
 		case 0:
@@ -226,7 +231,6 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* p
 			break;
 		case 3:
 			decrNbPaquetDansFile(statNoeud,localisation);
-			//delPaquet(evt,listePaquet);
 			//XXX optimisation mémoire: supprimer les paquets au fur et à mesure
 			statNoeud->nbPaquetTotalDansFile--;
 			break;
@@ -242,5 +246,4 @@ void analyseNoeud(struct evt* evt, struct statNoeud* statNoeud, struct paquet* p
 	}
 
 
-	free(localisation);
 }
