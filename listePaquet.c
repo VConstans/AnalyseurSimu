@@ -26,6 +26,7 @@ struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 		struct paquet* maillon = createPaquet(evt);
 
 		maillon->suivant = NULL;
+		maillon->precedant = NULL;
 
 		liste->suivant=maillon;
 		liste->nbPaquet++;
@@ -51,6 +52,7 @@ struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 		{
 			struct paquet* maillon = createPaquet(evt);
 			maillon->suivant = curseur;
+			maillon->precedant = precedant;
 
 			liste->nbPaquet++;
 
@@ -75,6 +77,7 @@ struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 
 
 	maillon->suivant = NULL;
+	maillon->precedant = precedant;
 	precedant->suivant = maillon;
 	liste->nbPaquet++;
 	return maillon;
@@ -134,55 +137,27 @@ struct localisationPaquet* posOfNumPaquet(struct paquet* paquet)
 }
 
 
-void delPaquet(struct evt* evt, struct listePaquet* liste)
+void delPaquet(struct evt* evt, struct listePaquet* liste, struct paquet* paquet)
 {
-	//File vide
-	if(liste->suivant == NULL)
+	if(paquet->precedant == NULL)
 	{
-		printf("Liste vide\n");
-		return;
+		liste->suivant = paquet>suivant;
+	}
+	else
+	{
+		paquet->precedant->suivant = paquet->suivant;
+	}
+	if( paquet->suivant != NULL)
+	{
+		paquet->suivant->precedant = paquet->precedant;
 	}
 
-	struct paquet* curseur = liste->suivant;
-	struct paquet* precedant = NULL;
+	liste->nbPaquet--;
 
-	//File non vide
-	while(curseur!=NULL)
-	{
-		if(evt->pid > curseur->numPaquet)
-		{
-			precedant = curseur;
-			curseur = curseur->suivant;
-		}
-		else if(evt->pid == curseur->numPaquet)
-		{
-			//TODO
-			if(precedant == NULL)
-			{
-				liste->suivant = curseur->suivant;
-			}
-			else
-			{
-				precedant->suivant = curseur->suivant;
-			}
+	//TODO autre free dans struct
+	free(curseur);
 
-			liste->nbPaquet--;
-
-			free(curseur);
-
-			return;
-		}
-		else /*if(numFluxPaquet < curseur->numFlux)*/
-		{
-			printf("Paquet pas dans le liste\n");
-		}
-
-	}
-
-	//Insertion en fin de liste
-	printf("Paquet par trouvé\n");
 	return;
-
 }
 
 
