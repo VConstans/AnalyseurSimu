@@ -123,7 +123,6 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 			}
 			setActualTemps(evt,paquet);
 			updatePos(paquet);
-	//		addAndSetEmissionPaquet(evt,flux->paquets,trace,statNoeud);
 			//XXX optimisation mémoire: chargé les info sur le paquet une fois que le paquet à été émis, et pas tout charger des le debut
 			break;
 		case 1:
@@ -165,7 +164,6 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 
 				printf("Temps passé dans la liste: \t\t%f\n",duree);
 			}
-	//		updatePos(evt,flux->paquets);	//XXX utile?
 			break;
 		case 3:
 			setRecepDatePaquet(evt->temps,paquet);	//XXX utile?
@@ -180,10 +178,6 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 				printf("\n\n----------------------------------------------\n\n");
 			}
 			addTemps(statG,paquet);
-	//		updatePos(evt,flux->paquets);	//XXX utile?
-			//XXX optimisation update revoie la position du pauqet et setRecep l'uilise
-
-			//TODO
 			delai = calculDuree(paquet,flux);
 			if(opt->echDelai != NONE && opt->echDelai == (int)evt->fid)
 			{
@@ -202,7 +196,6 @@ struct paquet* analyseFlux(struct evt* evt, struct listeFlux* listeFlux, struct 
 				printf("\n\n----------------------------------------------\n\n");
 			}
 			addTemps(statG,paquet);
-	//		updatePos(evt,flux->paquets);	//XXX utile?
 			setRecepDatePaquet(-1,paquet);	//XXX mettre a jour
 	}
 

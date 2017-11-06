@@ -111,7 +111,9 @@ int main(int argc, char* argv[])
 
 	initAnalyse(&stat,&flux,&statNoeud,&dataOutput,matAdj,&listeLien,&opt);
 
+	printf("Debut\n");
 	initTrace(&flux,fdTrace);
+	printf("fin\n");
 
 
 	struct evt* ancienEvt=NULL;

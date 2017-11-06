@@ -18,58 +18,6 @@ struct paquet* createPaquet(struct evt* evt)
 }
 
 
-/*
-void setEmissionPaquet(struct evt* evt,struct listePaquet* liste)
-{
-	struct paquet* curseur = liste->suivant;
-
-	//File non vide
-	while(curseur!=NULL)
-	{
-		}
-		else if(evt->pid == curseur->numPaquet)
-		{
-			printf("Erreur, paquet déjà emis\n");
-			return;
-		}
-		else *if(numFluxPaquet < curseur->numFlux)
-		{
-			struct paquet* maillon = createPaquet(evt,trace,statNoeud);
-			maillon->suivant = curseur;
-
-			liste->nbPaquet++;
-
-			//Insertion en debut de liste
-			if(precedant == NULL)
-			{
-				liste->suivant = maillon;
-				return;
-			}
-			else
-			{
-				precedant->suivant = maillon;
-				return;
-			}
-		}
-			curseur = curseur->suivant;
-
-	}
-
-	//Insertion en fin de liste
-	struct paquet* maillon = createPaquet(evt,trace,statNoeud);
-	maillon->pos = convPosToNum(evt->src);
-
-
-
-	maillon->suivant = NULL;
-	precedant->suivant = maillon;
-	liste->nbPaquet++;
-	return;
-}
-
-*/
-
-
 struct paquet* addPaquet(struct evt* evt,struct listePaquet* liste)
 {
 	//File vide
@@ -158,59 +106,6 @@ void setRecepDatePaquet(double temps, struct paquet* paquet)
 {
 	paquet->reception = temps;
 }
-
-/*
-int placementFile(unsigned int numPaquet,FILE* trace,struct statNoeud* statNoeud)
-{
-	long int backupPosition = ftell(trace);
-	struct evt* evtTmp = NULL;
-
-	do
-	{
-		if(evtTmp!=NULL)
-		{
-			free(evtTmp->src);
-			free(evtTmp->dst);
-			free(evtTmp->pos);
-			free(evtTmp);
-		}
-		evtTmp = nextEvt(trace);
-		
-	} while (evtTmp->pid != numPaquet);
-
-	int retour;
-
-	switch(evtTmp->code)
-	{
-		case 1:
-			//XXX pas de sens
-			break;
-		case 2:
-			retour = convPosToNum(evtTmp->pos);
-			break;
-		case 3:
-			retour = -1;
-			//XXX arrive a dest
-			break;
-		case 4:
-			retour = -1;
-			//TODO quel file?
-			break;
-	}
-
-	//TODO verifier si le lien entre les deux noeuds existe rellement
-	free(evtTmp->src);
-	free(evtTmp->dst);
-	free(evtTmp->pos);
-	free(evtTmp);
-
-	fseek(trace,backupPosition,SEEK_SET);
-
-	return retour;
-}
-
-*/
-
 
 
 

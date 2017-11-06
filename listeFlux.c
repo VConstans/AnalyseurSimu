@@ -204,12 +204,12 @@ void initTrace(struct listeFlux* listeFlux,FILE* fdTrace)
 
 	while((newEvt=nextEvt(fdTrace))!=NULL)
 	{
-		flux = addFlux(newEvt,listeFlux);
-		paquet = addPaquet(newEvt,flux->paquets);
-
-		//XXX peut le mettre avant les deux instruction precedante?
 		if(newEvt->code != 2) 
 		{
+			flux = addFlux(newEvt,listeFlux);
+			paquet = addPaquet(newEvt,flux->paquets);
+
+		//XXX peut le mettre avant les deux instruction precedante?
 			unsigned int pos = convPosToNum(newEvt->pos);
 			addListePosition(paquet->positions,pos);
 		}
